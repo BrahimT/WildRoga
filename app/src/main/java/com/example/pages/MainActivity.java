@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Adds any String Set to SharedPreferences so it can be accessed in a different page
     //This is the best way I can think of to send object data from page to page
+    //TODO update to pass JSON instead of StringSet (Problem with String set is the ordering is wrong)
     public void addStringSetToShardPreferences(String key, Set<String> set){
         SharedPreferences sharedPref = getSharedPreferences("MainActivity.java", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
