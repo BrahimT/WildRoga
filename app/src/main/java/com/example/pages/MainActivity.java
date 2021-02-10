@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.myapplication.R;
+import com.example.tools.BottomNavigationManager;
 import com.example.tools.SharedPreferencesManager;
 
 import entities.User;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Test
         sharedPreferencesManager.addUserToSharedPreferences(new User(-1, "Test"), sharedPrefs);
+
+        new BottomNavigationManager().setViewOnNavigationItemSelectedListener(this, findViewById(R.id.bottom_nav_view));
     }
 
     //nav, material.io
