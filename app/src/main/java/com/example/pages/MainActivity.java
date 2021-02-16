@@ -31,7 +31,5 @@ public class MainActivity extends AppCompatActivity {
         new BottomNavigationManager().setViewOnNavigationItemSelectedListener(this, findViewById(R.id.bottom_nav_view));
     }
 
-    //nav, material.io
-
 
 }
