@@ -10,8 +10,9 @@
     <item
         android:id="@+id/about_activity"
         android:title="About Activity"/>
-
-
+    <item
+        android:id="@+id/videos"
+        android:title="videos" />
 
 
 </menu>
