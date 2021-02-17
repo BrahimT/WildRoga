@@ -11,6 +11,7 @@
         android:theme="@style/Theme.MyApplication">
          <activity android:name="com.example.pages.fibase_database"></activity>
         <activity android:name="com.example.pages.AboutActivity"></activity>
+        <activity android:name="com.example.pages.fibase_database"></activity>
         <activity android:name="com.example.pages.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

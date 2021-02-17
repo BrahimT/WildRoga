@@ -8,13 +8,11 @@ import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+
 
 
 public class fibase_database extends AppCompatActivity {
@@ -24,8 +22,7 @@ public class fibase_database extends AppCompatActivity {
     private VideoView videoview;
     private Uri videoUri;
     MediaController media;
-    private StorageReference storage;
-    private DatabaseReference mDatabase;
+
     private static  final int PICK_VIDEO_REQUEST=1;
 
 
@@ -39,8 +36,7 @@ public class fibase_database extends AppCompatActivity {
         videoview= findViewById(R.id.videoView2);
 
         media=new  MediaController(this);
-        storage= FirebaseStorage.getInstance().getReference("videos");
-        mDatabase = FirebaseDatabase.getInstance().getReference("videos");
+
         videoview.setMediaController(media);
         media.setAnchorView(videoview);
         videoview.start();
@@ -51,7 +47,7 @@ public class fibase_database extends AppCompatActivity {
             }
 
             private void upload() {
-Intent intent =new Intent();
+            Intent intent =new Intent();
                 intent.setType("videos/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult( intent,PICK_VIDEO_REQUEST);
