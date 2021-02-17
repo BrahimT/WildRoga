@@ -22,10 +22,12 @@ public class BottomNavigationManager {
 
                 case R.id.about_activity:
                     nextActivity = new Intent(currentContext, AboutActivity.class);
+                    break;
 
                 case R.id.videos:
                     nextActivity = new Intent(currentContext, fibase_database.class);
-            }
+                    break;
+        }
 
 
             if(nextActivity != null){
