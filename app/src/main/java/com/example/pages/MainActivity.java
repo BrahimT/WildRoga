@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.myapplication.R;
 import com.example.tools.BottomNavigationManager;
@@ -26,9 +28,19 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
 
         //Test
-        sharedPreferencesManager.addUserToSharedPreferences(new User(-1, "Test"), sharedPrefs);
+        demoSharedPreferences();
 
         new BottomNavigationManager().setViewOnNavigationItemSelectedListener(this, findViewById(R.id.bottom_nav_view));
+    }
+
+    private void demoSharedPreferences(){
+        Button spDemoButton = findViewById(R.id.sp_demo_submit);
+        EditText spDemo = findViewById(R.id.sp_demo);
+
+        spDemoButton.setOnClickListener((view)->{
+            sharedPreferencesManager.addUserToSharedPreferences(new User(-1, spDemo.getText().toString()), sharedPrefs);
+        });
+
     }
 
 
