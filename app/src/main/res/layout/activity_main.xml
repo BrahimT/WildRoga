@@ -10,29 +10,31 @@
         android:id="@+id/sp_demo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="248dp"
         android:text="Please enter your name here"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/sp_demo_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="259dp"
+        android:layout_height="110dp"
         android:text="Submit"
-        app:layout_constraintBottom_toBottomOf="@id/sp_demo"
+        app:layout_constraintTop_toBottomOf="@id/sp_demo"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        app:layout_constraintTop_toTopOf="@id/bottom_nav_view" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="-101dp"
-        tools:layout_editor_absoluteY="-16dp"
-        app:menu="@menu/bottom_nav_menu" />
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="673dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
