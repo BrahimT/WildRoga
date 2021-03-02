@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "428816378633",
+    "firebase_url": "https://brahim-99.firebaseio.com",
+    "project_id": "brahim-99",
+    "storage_bucket": "brahim-99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428816378633:android:b00b03f1a9b582258a41d8",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "428816378633-bbuapd9cn3muj5q56hssqt0c5ep34ahm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYWyiqZBe-JsWydHwAVouOFIJOHxTW-VM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "428816378633-bbuapd9cn3muj5q56hssqt0c5ep34ahm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

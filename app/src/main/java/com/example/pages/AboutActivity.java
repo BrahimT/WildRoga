@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.tools.BottomNavigationManager;
 import com.example.tools.SharedPreferencesManager;
@@ -26,6 +27,5 @@ public class AboutActivity extends AppCompatActivity {
 
         new BottomNavigationManager().setViewOnNavigationItemSelectedListener(this, findViewById(R.id.bottom_nav_view));
 
-        Log.d("Test Shared Preferences", sharedPreferencesManager.getUserFromSharedPreferences(sharedPrefs).getName());
     }
 }

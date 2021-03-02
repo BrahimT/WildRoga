@@ -9,7 +9,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import android.view.MenuItem;
+
+import android.widget.Button;
+import android.widget.EditText;
+
 
 import com.example.fragments.AboutFragment;
 import com.example.fragments.FavoritesFragment;
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPrefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
 
         //Test
-        sharedPreferencesManager.addUserToSharedPreferences(new User(-1, "Test"), sharedPrefs);
+        demoSharedPreferences();
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             switch ( item.getItemId() ) {
@@ -70,6 +75,16 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.content_container, fragment)
                 .addToBackStack(null)
                 .commit();
+
+    private void demoSharedPreferences(){
+        Button spDemoButton = findViewById(R.id.sp_demo_submit);
+        EditText spDemo = findViewById(R.id.sp_demo);
+
+        spDemoButton.setOnClickListener((view)->{
+            sharedPreferencesManager.addUserToSharedPreferences(new User(-1, spDemo.getText().toString()), sharedPrefs);
+        });
+
     }
+
 
 }
