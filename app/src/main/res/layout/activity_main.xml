@@ -23,18 +23,17 @@
         android:text="Submit"
         app:layout_constraintTop_toBottomOf="@id/sp_demo"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
-        app:layout_constraintTop_toTopOf="@id/bottom_nav_view" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="673dp" />
+        app:menu="@menu/bottom_nav_menu"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

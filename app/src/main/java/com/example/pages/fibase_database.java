@@ -51,7 +51,7 @@ public class fibase_database extends AppCompatActivity {
             }
 
             private void upload() {
-Intent intent =new Intent();
+                Intent intent =new Intent();
                 intent.setType("videos/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult( intent,PICK_VIDEO_REQUEST);
