@@ -16,16 +16,21 @@ public class BottomNavigationManager {
             Intent nextActivity = null;
 
             switch(item.getItemId()){
-                case R.id.main_activity:
+                case R.id.home_activity:
                     nextActivity = new Intent(currentContext, MainActivity.class);
                     break;
 
-                case R.id.about_activity:
+                case R.id.video_activity:
                     nextActivity = new Intent(currentContext, AboutActivity.class);
+
+                case R.id.favorite_activity:
+                    //nextActivity = new Intent(currentContext, )
+
                       break;
                 case R.id.videos:
                     nextActivity = new Intent(currentContext, fibase_database.class);
                     break;
+
             }
 
 
@@ -35,7 +40,7 @@ public class BottomNavigationManager {
             }
 
             return false;
-                });
+        });
 
         return bottomNavView;
     }

@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Wild Roga</string>
+
+    <!-- UI Component Strings -->
+    <string name="home">Home</string>
+    <string name="video">Video</string>
+    <string name="favorite">Favorite</string>
+    <string name="about">About</string>
+    <string name="profile">Profile</string>
+    <string name="whatsnew">What\'s New!</string>
+
 </resources>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.tools.BottomNavigationManager;
 import com.example.tools.SharedPreferencesManager;
 
 public class AboutActivity extends AppCompatActivity {
@@ -24,8 +25,7 @@ public class AboutActivity extends AppCompatActivity {
         sharedPreferencesManager = new SharedPreferencesManager();
         sharedPrefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
 
-        TextView spTestView = findViewById(R.id.textView);
-        spTestView.setText("Hello " + sharedPreferencesManager.getUserFromSharedPreferences(sharedPrefs).getName());
+        new BottomNavigationManager().setViewOnNavigationItemSelectedListener(this, findViewById(R.id.bottom_nav_view));
 
     }
 }
