@@ -27,9 +27,9 @@ public class BottomNavigationManager {
                     //nextActivity = new Intent(currentContext, )
 
                       break;
-                case R.id.videos:
-                    nextActivity = new Intent(currentContext, fibase_database.class);
-                    break;
+//                case R.id.videos:
+//                    nextActivity = new Intent(currentContext, fibase_database.class);
+//                    break;
 
             }
 
