@@ -45,9 +45,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferencesManager = new SharedPreferencesManager();
         sharedPrefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
 
-        //Test
-        demoSharedPreferences();
-
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             switch ( item.getItemId() ) {
                 case R.id.home_activity:
@@ -76,15 +73,5 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
 
-    private void demoSharedPreferences(){
-        Button spDemoButton = findViewById(R.id.sp_demo_submit);
-        EditText spDemo = findViewById(R.id.sp_demo);
-
-        spDemoButton.setOnClickListener((view)->{
-            sharedPreferencesManager.addUserToSharedPreferences(new User(-1, spDemo.getText().toString()), sharedPrefs);
-        });
-
     }
-
-
 }
