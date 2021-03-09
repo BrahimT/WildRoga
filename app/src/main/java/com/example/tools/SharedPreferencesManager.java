@@ -3,11 +3,11 @@ package com.example.tools;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.model.LoggedInUser;
 import com.google.gson.Gson;
 
 import java.util.Set;
 
-import entities.User;
 
 public class SharedPreferencesManager {
 
@@ -22,12 +22,12 @@ public class SharedPreferencesManager {
         addStringToSharedPreferences(key, gson.toJson(obj), sharedPref);
     }
 
-    public void addUserToSharedPreferences(User user, SharedPreferences sharedPref){
+    public void addUserToSharedPreferences(LoggedInUser user, SharedPreferences sharedPref){
         addObjectToSharedPreferences(user, "user", sharedPref);
     }
 
-    public User getUserFromSharedPreferences(SharedPreferences sharedPref){
-        return gson.fromJson(sharedPref.getString("user", null), User.class);
+    public LoggedInUser getUserFromSharedPreferences(SharedPreferences sharedPref){
+        return gson.fromJson(sharedPref.getString("user", null), LoggedInUser.class);
     }
 
     public void addStringToSharedPreferences(String key, String s, SharedPreferences sharedPref){

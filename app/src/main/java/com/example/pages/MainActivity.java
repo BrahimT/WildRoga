@@ -1,6 +1,7 @@
 package com.example.pages;
 
-import androidx.annotation.NonNull;
+import
+        androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -25,8 +26,6 @@ import com.example.myapplication.R;
 import com.example.tools.BottomNavigationManager;
 import com.example.tools.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import entities.User;
 
 public class MainActivity extends AppCompatActivity {
     private SharedPreferencesManager sharedPreferencesManager = null;
