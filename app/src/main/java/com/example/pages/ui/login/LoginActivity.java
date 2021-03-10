@@ -89,12 +89,12 @@ public class LoginActivity extends AppCompatActivity {
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
+                //Not used, however must be implemented to utilize afterTextChanged
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
+                //Not used, however must be implemented to utilize afterTextChanged
             }
 
             @Override
