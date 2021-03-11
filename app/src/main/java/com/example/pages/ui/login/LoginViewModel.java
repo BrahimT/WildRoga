@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.content.Context;
 import android.util.Patterns;
 
 import com.example.pages.loginData.LoginRepository;
 import com.example.pages.loginData.Result;
 import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
+import com.example.tools.PasswordUtilities;
+import com.example.tools.SessionManager;
 
 public class LoginViewModel extends ViewModel {
 
@@ -29,7 +32,7 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, byte[] password) {
+    public void login(String username, char[] password) {
         // can be launched in a separate asynchronous job
         Result<LoggedInUser> result = loginRepository.login(username, password);
 
@@ -41,11 +44,14 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void loginDataChanged(String username, String password) {
+    public void loginDataChanged(String username, char[] password) {
+
+        int passwordMessage = isPasswordValid(password);
+
         if (!isUserNameValid(username)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
+        } else if (passwordMessage != R.string.valid_password) {
+            loginFormState.setValue(new LoginFormState(null, passwordMessage));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
@@ -63,8 +69,29 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
+    private int isPasswordValid(char[] password) {
+        if(password == null || PasswordUtilities.trim(password).length < 9) return R.string.invalid_password_number;
+
+        if(!passwordHasCapitalLetter(password)) return R.string.invalid_password_capital;
+
+        if(!passwordHasNumber(password)) return R.string.invalid_password_number;
+
+        return R.string.valid_password;
+    }
+
+    private boolean passwordHasNumber(char[] password){
+        for(char c: password){
+            if (Character.isDigit(c)) return true;
+        }
+
+        return false;
+    }
+
+    private boolean passwordHasCapitalLetter(char[] password){
+        for(char c: password){
+            if (Character.isUpperCase(c)) return true;
+        }
+
+        return false;
     }
 }

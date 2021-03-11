@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.pages.ui.login.LoginViewModel;
 import com.example.pages.ui.login.LoginViewModelFactory;
+import com.example.tools.PasswordUtilities;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -100,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                        PasswordUtilities.editTextToCharArray(passwordEditText));
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
@@ -111,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     loginViewModel.login(usernameEditText.getText().toString(),
-                            hashPassword(editTextToCharArray(passwordEditText)));
+                            PasswordUtilities.editTextToCharArray(passwordEditText));
                 }
                 return false;
             }
@@ -124,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 loginViewModel.login(usernameEditText.getText().toString(),
-                        hashPassword(editTextToCharArray(passwordEditText)));
+                        PasswordUtilities.editTextToCharArray(passwordEditText));
             }
         });
     }
@@ -139,37 +140,5 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
-    //Not auto generated
-    private char[] editTextToCharArray(EditText et){
-        Editable text = et.getText();
 
-        char[] ca = new char [text.length()];
-
-        for(int i = 0; i < text.length() - 1; i++){
-            ca[i] = text.charAt(i);
-        }
-
-        return ca;
-    }
-
-    //Not auto generated
-    //https://www.baeldung.com/java-password-hashing consulted
-    private byte[] hashPassword(char[] password){
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-
-        KeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
-
-        try {
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            return factory.generateSecret(spec).getEncoded();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 }

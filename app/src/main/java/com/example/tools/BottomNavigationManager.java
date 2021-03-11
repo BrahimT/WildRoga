@@ -22,6 +22,7 @@ public class BottomNavigationManager {
 
                 case R.id.video_activity:
                     nextActivity = new Intent(currentContext, AboutActivity.class);
+                    break;
 
                 case R.id.favorite_activity:
                     //nextActivity = new Intent(currentContext, )
