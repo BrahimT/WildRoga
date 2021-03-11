@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class LoginDataSource {
 
-    public Result<LoggedInUser> createAccount(String username, byte[] passwordHash){
+    public Result<LoggedInUser> createAccount(String username, char[] password){
         //TODO verify no user with name already exists in db
         //TODO write username and password hash to db
         //TODO call login function and return the Result from that method call
@@ -19,15 +19,21 @@ public class LoginDataSource {
     }
 
     public Result<LoggedInUser> login(String username, char[] password){
-        if(username.contentEquals("test") && PasswordUtilities.verifyPassword(PasswordUtilities.hashPassword(new char[]{'T', 'e', 's', 't', 'i', 'n', 'g', '1', '2', '3'}, PasswordUtilities.getSalt()), password)){
+        try{
+            if(username.contentEquals("test") && PasswordUtilities.verifyPassword(PasswordUtilities.hashPassword(new char[]{'T', 'e', 's', 't', 'i', 'n', 'g', '1', '2', '3'}, PasswordUtilities.getSalt())
+                    ,password)){
 
-            return new Result.Success<>(new LoggedInUser(java.util.UUID.randomUUID().toString(), username));
+                return new Result.Success<>(new LoggedInUser(java.util.UUID.randomUUID().toString(), username));
+            }
+        }catch(Exception e){
+            return new Result.Error(new IOException("Error logging in", e));
         }
+
 
         return new Result.Error(new IOException("Error logging in"));
     }
 
-//    public Result<LoggedInUser> login(String username, byte[] passwordHash) {
+//    public Result<LoggedInUser> login(String username, char[] password) {
 //        //TODO verify user matches db record
 //        //TODO create and return user object if match exists in db
 //        try {
