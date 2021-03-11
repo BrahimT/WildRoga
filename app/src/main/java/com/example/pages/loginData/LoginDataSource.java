@@ -1,5 +1,7 @@
 package com.example.pages.loginData;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.example.model.LoggedInUser;
 import com.example.tools.PasswordUtilities;
 import com.example.tools.SessionManager;
@@ -13,8 +15,10 @@ public class LoginDataSource {
 
     public Result<LoggedInUser> createAccount(String username, byte[] passwordHash){
         //TODO verify no user with name already exists in db
+      // DBhelper db = new   DBhelper();
         //TODO write username and password hash to db
         //TODO call login function and return the Result from that method call
+
         return null;
     }
 
