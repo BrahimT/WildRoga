@@ -1,5 +1,7 @@
 package com.example.pages.loginData;
 
+import android.util.Log;
+
 import com.example.model.LoggedInUser;
 
 /**
