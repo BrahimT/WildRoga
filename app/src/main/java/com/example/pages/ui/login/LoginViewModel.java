@@ -28,6 +28,7 @@ public class LoginViewModel extends ViewModel {
         return loginFormState;
     }
 
+    //add username/email to the return
     LiveData<LoginResult> getLoginResult() {
         return loginResult;
     }
@@ -44,11 +45,11 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void loginDataChanged(String username, char[] password) {
+    public void loginDataChanged(String email, char[] password) {
 
         int passwordMessage = isPasswordValid(password);
 
-        if (!isUserNameValid(username)) {
+        if (!isEmailNameValid(email)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
         } else if (passwordMessage != R.string.valid_password) {
             loginFormState.setValue(new LoginFormState(null, passwordMessage));
@@ -57,8 +58,23 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
+    //Testing registration password checking
+    public void registrationDataChanged(String name, String email, char[] password, char[] passwordConfirm) {
+        int passwordMessage = isPasswordValid(password);
+        int confirmMessage = isPasswordConfirmed(password, passwordConfirm);
+
+        if (!isEmailNameValid(email)) {
+            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+        }
+        else if (passwordMessage != R.string.valid_password) {
+            loginFormState.setValue(new LoginFormState(null, passwordMessage));
+        } else if (confirmMessage != R.string.valid_password) {
+            loginFormState.setValue(new LoginFormState(null, confirmMessage));
+        }
+    }
+
     // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
+    private boolean isEmailNameValid(String username) {
         if (username == null) {
             return false;
         }
@@ -70,11 +86,17 @@ public class LoginViewModel extends ViewModel {
     }
 
     private int isPasswordValid(char[] password) {
-        if(password == null || PasswordUtilities.trim(password).length < 9) return R.string.invalid_password_number;
+        if(password == null || PasswordUtilities.trim(password).length < 9) return R.string.invalid_password_length;
 
         if(!passwordHasCapitalLetter(password)) return R.string.invalid_password_capital;
 
         if(!passwordHasNumber(password)) return R.string.invalid_password_number;
+
+        return R.string.valid_password;
+    }
+
+    private int isPasswordConfirmed(char[] password, char[] confirmPassword) {
+        if (!passwordMatches(password, confirmPassword)) return R.string.invalid_password_confirm;
 
         return R.string.valid_password;
     }
@@ -94,4 +116,16 @@ public class LoginViewModel extends ViewModel {
 
         return false;
     }
+
+    // Not a proper way to check, shouldn't convert char array back to string due to security purposes, this is simply for testing
+    // TODO write checking method without converting to string
+    private boolean passwordMatches(char[] password, char[] confirmPassword) {
+        String p1 = PasswordUtilities.charArrayToString(password);
+        String p2 = PasswordUtilities.charArrayToString(confirmPassword);
+
+        if (p1.equals(p2)) return true;
+
+        return false;
+    }
+
 }

@@ -9,6 +9,8 @@ import com.example.pages.ui.login.LoginActivity;
 
 import java.util.HashMap;
 
+// THIS IS NOT NEEDED ANYMORE, CAN BE DELETED IN CLEAN UP.
+
 public class SessionManager {
     SharedPreferences prefs;
     SharedPreferences.Editor editor;

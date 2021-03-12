@@ -18,6 +18,7 @@ public class LoginDataSource {
         return null;
     }
 
+    // Test login
     public Result<LoggedInUser> login(String username, char[] password){
         if(username.contentEquals("test") && PasswordUtilities.verifyPassword(PasswordUtilities.hashPassword(new char[]{'T', 'e', 's', 't', 'i', 'n', 'g', '1', '2', '3'}, PasswordUtilities.getSalt()), password)){
 

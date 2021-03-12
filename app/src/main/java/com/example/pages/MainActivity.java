@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //temporary login test
-//        navigateToLoginTest();
+        //navigateToLoginTest();
 
         setContentView(R.layout.activity_main);
         loadFragment(new HomeFragment());
