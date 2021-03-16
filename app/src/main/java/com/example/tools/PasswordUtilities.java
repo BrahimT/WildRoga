@@ -88,7 +88,7 @@ public class PasswordUtilities {
         return hash;
     }
 
-    //from https://howtodoinjava.com/java/java-security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
+
     public static boolean verifyPassword(byte[] hash1, char[] password){
         byte[] hash2 = getHashFromHashedPassword(hashPassword(password, getSaltFromHashedPassword(hash1, 16)), 16);
         hash1 = getHashFromHashedPassword(hash1, 16);
