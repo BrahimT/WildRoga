@@ -19,7 +19,7 @@ public class PasswordUtilities {
 
         char[] ca = new char [text.length()];
 
-        for(int i = 0; i < text.length() - 1; i++){
+        for(int i = 0; i < text.length(); i++){
             ca[i] = text.charAt(i);
         }
 
@@ -36,18 +36,15 @@ public class PasswordUtilities {
         return salt;
     }
     //https://www.baeldung.com/java-password-hashing consulted
-    //TODO return salt and hash
     public static byte[] hashPassword(char[] password, byte[] salt){
 
-        Log.d("password", password.toString());
-
-
+        password = trim(password);
 
         KeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
 
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            return factory.generateSecret(spec).getEncoded();
+            return addSaltToHash(salt, factory.generateSecret(spec).getEncoded());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
@@ -102,9 +99,23 @@ public class PasswordUtilities {
         {
             diff |= hash1[i] ^ hash2[i];
         }
-        
+
         return diff == 0;
     }
+
+//    public static boolean verifyPassword(byte[] hashedPassword1, char[] password){
+//        byte[] hashedPassword2 = hashPassword(password, getSaltFromHashedPassword(hashedPassword1, 16));
+//        byte[] hash2 = getHashFromHashedPassword(hashedPassword2, 16);
+//        byte[] hash1 = getHashFromHashedPassword(hashedPassword1, 16);
+//
+//
+//        Log.d("hash1", byteArrayToString(hash1));
+//        Log.d("hash2", byteArrayToString(hash2));
+//
+//        return byteArrayContentEquals(hash1, hash2);
+//    }
+
+
 
     public static boolean byteArrayContentEquals(byte[] array1, byte[] array2){
 
