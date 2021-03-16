@@ -24,7 +24,6 @@
             android:theme="@style/NoActionBar"></activity>
         <activity android:name="com.example.pages.ui.login.LoginActivity" />
         <activity android:name="com.example.pages.ui.login.RegistrationActivity" />
-        <activity android:name="com.example.pages.ui.login.LoginActivity" />
         <activity android:name="com.example.pages.fibase_database" />
         <activity android:name="com.example.pages.AboutActivity" />
         <activity android:name="com.example.pages.MainActivity">
