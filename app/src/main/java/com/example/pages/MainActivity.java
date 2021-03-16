@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 //        navigateToPaymentTest();
 
         //temporary login test
-//        navigateToLoginTest();
+        //navigateToLoginTest();
 
         setContentView(R.layout.activity_main);
         loadFragment(new HomeFragment());
@@ -80,8 +80,5 @@ public class MainActivity extends AppCompatActivity {
 
     private void navigateToLoginTest(){
         this.startActivity(new Intent(this, LoginActivity.class));
-    }
-    private void navigateToPaymentTest(){
-        this.startActivity(new Intent(this, PaymentActivity.class));
     }
 }

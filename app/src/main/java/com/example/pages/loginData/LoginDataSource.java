@@ -26,6 +26,7 @@ public class LoginDataSource {
         return null;
     }
 
+    // Test login
     public Result<LoggedInUser> login(String username, char[] password){
 
 //        dbh = new DBHelper(, null, null, 3);
