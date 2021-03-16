@@ -15,7 +15,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +22,9 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.tools.PasswordUtilities;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,8 +37,10 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
+        final TextInputEditText usernameEditText = findViewById(R.id.username);
+        final TextInputEditText passwordEditText = findViewById(R.id.password);
+        final TextInputLayout usernameLayout = findViewById(R.id.layout_email);
+        final TextInputLayout passwordLayout = findViewById(R.id.layout_password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
         final TextView registerText = findViewById(R.id.register);
@@ -47,11 +51,19 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             loginButton.setEnabled(loginFormState.isDataValid());
+
+            //Email Entry Error
             if (loginFormState.getEmailError() != null) {
-                usernameEditText.setError(getString(loginFormState.getEmailError()));
+                usernameLayout.setError(getString(loginFormState.getEmailError()));
+            } else {
+                usernameLayout.setError(null);
             }
+
+            //Password Entry Error
             if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                passwordLayout.setError(getString(loginFormState.getPasswordError()));
+            } else {
+                passwordLayout.setError(null);
             }
         });
 
@@ -74,14 +86,10 @@ public class LoginActivity extends AppCompatActivity {
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Not used, however must be implemented to utilize afterTextChanged
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Not used, however must be implemented to utilize afterTextChanged
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -111,7 +119,21 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         forgotPassText.setOnClickListener(v -> {
+            final TextInputLayout textInputLayout = new TextInputLayout(this);
 
+
+            final TextInputEditText forgotPass = new TextInputEditText(this);
+
+            new MaterialAlertDialogBuilder(this)
+                    .setView(R.layout.alert_forgot_password)
+                    .setMessage(R.string.message_forgot_password)
+                    .setTitle(R.string.action_forgot_password)
+                    .setPositiveButton(R.string.action_send_email, (dialog, which) -> {
+                        Toast.makeText(this, "TEST: Verification email sent", Toast.LENGTH_SHORT).show();
+
+                        //TODO Add firebase forgot password email implementation and error checking with firebase to ensure user exists
+                    })
+                    .show();
         });
     }
 
