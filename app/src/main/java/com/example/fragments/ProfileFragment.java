@@ -22,7 +22,9 @@ import com.example.tools.SharedPreferencesManager;
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
-    private LoginRepository loginRepo;
+    private SharedPreferencesManager sharedPreferencesManager;
+    private SharedPreferences sharedPrefs;
+    private SessionManager session;
 
     public ProfileFragment() { }
 
@@ -35,11 +37,8 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loginRepo = loginRepo.getInstance(new LoginDataSource());
+        session = new SessionManager(getActivity());
 
-        if (!loginRepo.isLoggedIn()) {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-        }
+        session.checkLogin();
     }
 }

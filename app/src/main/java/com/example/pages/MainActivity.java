@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //temporary payment test
+//        navigateToPaymentTest();
+
         //temporary login test
         //navigateToLoginTest();
 
