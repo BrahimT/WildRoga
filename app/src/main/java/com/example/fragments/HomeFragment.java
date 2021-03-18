@@ -1,6 +1,8 @@
 package com.example.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.tools.VideoViewAdapter;
 
@@ -22,24 +25,23 @@ public class HomeFragment extends Fragment {
     private RecyclerView hView;
     private RecyclerView.Adapter hAdapter;
     private RecyclerView.LayoutManager hManager;
+    private Video v;
+    private List<Video> videos;
 
     public HomeFragment() { }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        v = new Video();
 
-        hView = (RecyclerView) view.findViewById(R.id.recycler_home);
+        hView = view.findViewById(R.id.recycler_home);
 
         hManager = new LinearLayoutManager(getActivity());
         hView.setLayoutManager(hManager);
 
-        List<String> dataset = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            dataset.add("Thumbnail " + i);
-        }
+        hAdapter = new VideoViewAdapter(loadVideos());
 
-        hAdapter = new VideoViewAdapter(dataset);
         hView.setAdapter(hAdapter);
 
         return view;
@@ -48,6 +50,22 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+    }
 
+    //TEMPORARY METHOD TO LOAD VIDEOS TO LIST | TESTING
+    public List<Video> loadVideos() {
+        videos = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            videos.add(new Video(i, null, "video title" + i, drawableToBitmap(R.drawable.banner_home)));
+        }
+
+        return videos;
+    }
+
+    //TEMPORARY METHOD TO CONVERT DRAWABLE TO BITMAP
+    public Bitmap drawableToBitmap(int drawable) {
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawable);
+        return bm;
     }
 }

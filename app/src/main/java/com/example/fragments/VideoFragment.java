@@ -39,7 +39,7 @@ public class VideoFragment extends Fragment {
             dataset.add("Thumbnail " + i);
         }
 
-        vAdapter = new VideoViewAdapter(dataset);
+        //vAdapter = new VideoViewAdapter(dataset);
         vView.setAdapter(vAdapter);
 
         Button vFilter = (Button) view.findViewById(R.id.video_filter);

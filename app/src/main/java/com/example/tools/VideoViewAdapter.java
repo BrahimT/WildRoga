@@ -3,56 +3,66 @@ package com.example.tools;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.Video;
 import com.example.myapplication.R;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
 public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.ViewHolder> {
-
     //This is for testing/demo purposes, remove when DB connection is implemented and replace with video thumbnails in imageview
-    private List<String> demoList;
+    private List<Video> videos;
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_row_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_cardview, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getTextView().setText(demoList.get(position));
+        holder.getThumbnailView().setImageBitmap(videos.get(position).getThumbnail());
+        holder.getTitleView().setText(videos.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return demoList.size();
+        return videos.size();
     }
 
-    public void add(int position, String item) {
-        demoList.add(position, item);
+    public void add(int position, Video video) {
+        videos.add(position, video);
         notifyItemInserted(position);
     }
 
-    public VideoViewAdapter(List<String> dataset) {
-        demoList = dataset;
+    public VideoViewAdapter(List<Video> videos) {
+        this.videos = videos;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final ImageView videoThumbnail;
+        private final TextView videoTitle;
+
 
         public ViewHolder(@NonNull View view) {
             super(view);
-            textView = (TextView) view.findViewById(R.id.itemText);
+            videoThumbnail = view.findViewById(R.id.video_thumbnail);
+            videoTitle =  view.findViewById(R.id.video_title);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public ImageView getThumbnailView() {
+            return videoThumbnail;
+        }
+
+        public TextView getTitleView() {
+            return videoTitle;
         }
     }
 }
