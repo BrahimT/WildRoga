@@ -16,14 +16,16 @@ public class Video {
     private int id;
     private VideoDifficulty difficulty;
     private String title;
-    private Bitmap thumbnail;
+    private String thumbnail;
+    private String videoURL;
 
     List<Video> videoList = new ArrayList<>();
 
     public Video() { }
 
-    public Video(int id, VideoDifficulty difficulty, String title, Bitmap thumbnail) {
+    public Video(int id,String videoURL ,VideoDifficulty difficulty, String title, String thumbnail) {
         this.id = id;
+        this.videoURL = videoURL;
         this.difficulty = difficulty;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -53,7 +55,7 @@ public class Video {
         this.title = title;
     }
 
-    public Bitmap getThumbnail() {
+    public String getThumbnail() {
         return this.thumbnail;
     }
 
@@ -63,5 +65,21 @@ public class Video {
 
     public List<Video> getVideoList() {
         return this.videoList;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getVideoURL() {
+        return videoURL;
+    }
+
+    public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
+    }
+
+    public void setVideoList(List<Video> videoList) {
+        this.videoList = videoList;
     }
 }
