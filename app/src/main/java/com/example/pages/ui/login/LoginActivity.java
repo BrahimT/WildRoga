@@ -2,6 +2,7 @@ package com.example.pages.ui.login;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -23,14 +25,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
+import com.example.pages.MainActivity;
 import com.example.tools.PasswordUtilities;
+import com.example.tools.SessionManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private final FirebaseFirestore FIRESTORE = FirebaseFirestore.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,8 +126,61 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.login(usernameEditText.getText().toString(),
-                    PasswordUtilities.editTextToCharArray(passwordEditText));
+            String email = usernameEditText.getText().toString();
+            String passwordHash = passwordEditText.toString();
+//            loginViewModel.login(usernameEditText.getText().toString(),
+//                    PasswordUtilities.editTextToCharArray(passwordEditText));
+
+
+                    
+            //Add dummy user to firestore
+            Map<String, String> user = new HashMap<>();
+            user.put("email", email);
+            user.put("passwordHash", "Testing123");
+            FIRESTORE.collection("users").add(user);
+
+            FIRESTORE.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+
+                    boolean foundUser = false;
+                    DocumentSnapshot snapshot;
+                    for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
+                        snapshot = queryDocumentSnapshots.getDocuments().get(i);
+                        if (snapshot.get("email").toString().equals(email) && snapshot.get("passwordHash").toString().equals(passwordHash)) {
+                            foundUser = true;
+
+                            break;
+                        }
+                    }
+                    if (foundUser) {
+                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        //    startActivity(new Intent(LoginActivity.this, HomeFragment.class));
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("email", email);
+                        Log.d("boop", "StartActivity");
+                        startActivity(intent);
+
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Invalid Login !", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(LoginActivity.this, "User Not Found", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+
         });
 
         forgotPassText.setOnClickListener(v -> {

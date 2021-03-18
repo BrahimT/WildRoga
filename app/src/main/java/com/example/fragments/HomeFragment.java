@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.tools.VideoViewAdapter;
@@ -50,6 +52,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+    }
+
+    public Button addToFavouritesButton(LoggedInUser user, Video video){
+        //Todo get real find button
+        Button b = (Button) getView();
+
+        b.setOnClickListener( (a) ->{
+            user.addVideoToFavourites(video);
+        });
+
+        return b;
     }
 
     //TEMPORARY METHOD TO LOAD VIDEOS TO LIST | TESTING

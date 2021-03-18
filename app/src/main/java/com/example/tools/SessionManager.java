@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.pages.ui.login.LoginActivity;
 
@@ -11,6 +12,7 @@ import java.util.HashMap;
 
 // THIS IS NOT NEEDED ANYMORE, CAN BE DELETED IN CLEAN UP.
 
+//TODO change to user object
 public class SessionManager {
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -36,6 +38,8 @@ public class SessionManager {
         if (!this.isLoggedIn()) {
             Intent intent = new Intent(context, LoginActivity.class);
             context.startActivity(intent);
+        }else{
+            Log.d("user", prefs.getString("email", "no user"));
         }
     }
 
