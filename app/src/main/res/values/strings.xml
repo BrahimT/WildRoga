@@ -34,4 +34,5 @@
     <string name="title_activity_payment">PaymentActivity</string>
     <string name="payments_show_name">%s</string>
 
+
 </resources>
