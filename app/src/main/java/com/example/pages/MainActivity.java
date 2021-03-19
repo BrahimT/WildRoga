@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
+            Log.d("boop", "intent");
             SessionManager sm = new SessionManager(this);
             sm.createLogin(bundle.getString("email"));
             loadFragment(new ProfileFragment());

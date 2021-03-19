@@ -131,54 +131,64 @@ public class LoginActivity extends AppCompatActivity {
 //            loginViewModel.login(usernameEditText.getText().toString(),
 //                    PasswordUtilities.editTextToCharArray(passwordEditText));
 
-
-                    
-            //Add dummy user to firestore
-            Map<String, String> user = new HashMap<>();
-            user.put("email", email);
-            user.put("passwordHash", "Testing123");
-            FIRESTORE.collection("users").add(user);
-
-            FIRESTORE.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-
-                    boolean foundUser = false;
-                    DocumentSnapshot snapshot;
-                    for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
-                        snapshot = queryDocumentSnapshots.getDocuments().get(i);
-                        if (snapshot.get("email").toString().equals(email) && snapshot.get("passwordHash").toString().equals(passwordHash)) {
-                            foundUser = true;
-
-                            break;
-                        }
-                    }
-                    if (foundUser) {
-                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                        //    startActivity(new Intent(LoginActivity.this, HomeFragment.class));
-
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("email", email);
-                        Log.d("boop", "StartActivity");
-                        startActivity(intent);
-
-
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Invalid Login !", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            Toast.makeText(LoginActivity.this, "User Not Found", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
+            char[] password = PasswordUtilities.editTextToCharArray(passwordEditText);
+            if(email.equals("test") && PasswordUtilities.verifyPassword(PasswordUtilities.hashPassword(password, PasswordUtilities.getSalt()), "Testing123".toCharArray())) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("email", email);
+                Log.d("boop", "StartActivity");
+                startActivity(intent);
+            }
+            else{
+                Log.d("boop", "Error");
+                Toast.makeText(LoginActivity.this, "Invalid Login !", Toast.LENGTH_SHORT).show();
+                loadingProgressBar.setVisibility(View.INVISIBLE);
+            }
+//            //Add dummy user to firestore
+//            Map<String, String> user = new HashMap<>();
+//            user.put("email", email);
+//            user.put("passwordHash", "Testing123");
+//            FIRESTORE.collection("users").add(user);
+//
+//            FIRESTORE.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//
+//                @Override
+//                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//
+//
+//                    boolean foundUser = false;
+//                    DocumentSnapshot snapshot;
+//                    for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
+//                        snapshot = queryDocumentSnapshots.getDocuments().get(i);
+//                        if (snapshot.get("email").toString().equals(email) && snapshot.get("passwordHash").toString().equals(passwordHash)) {
+//                            foundUser = true;
+//
+//                            break;
+//                        }
+//                    }
+//                    if (foundUser) {
+//                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+//                        //    startActivity(new Intent(LoginActivity.this, HomeFragment.class));
+//
+//                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                        intent.putExtra("email", email);
+//                        Log.d("boop", "StartActivity");
+//                        startActivity(intent);
+//
+//
+//                    } else {
+//                        Toast.makeText(LoginActivity.this, "Invalid Login !", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                }
+//            })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//
+//                            Toast.makeText(LoginActivity.this, "User Not Found", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    });
 
 
         });
