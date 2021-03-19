@@ -18,10 +18,16 @@ import com.example.myapplication.R;
 import com.example.tools.VideoViewAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.FutureTask;
 
 public class VideoFragment extends Fragment {
     private RecyclerView vView;
@@ -106,4 +112,7 @@ public class VideoFragment extends Fragment {
 
         return keywords;
     }
+
+
+
 }
