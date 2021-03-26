@@ -33,6 +33,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_payment">PaymentActivity</string>
     <string name="payments_show_name">%s</string>
+    <string name="text_registration_1">CREATE ACCOUNT</string>
+    <string name="text_registration_2">You Belong Here.</string>
+    <string name="text_login_1">WELCOME BACK!</string>
+    <string name="text_login_2">Please Sign In.</string>
 
 
 </resources>

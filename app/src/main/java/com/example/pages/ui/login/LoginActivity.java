@@ -193,12 +193,11 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
+        registerText.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegistrationActivity.class));
+        });
+
         forgotPassText.setOnClickListener(v -> {
-            final TextInputLayout textInputLayout = new TextInputLayout(this);
-
-
-            final TextInputEditText forgotPass = new TextInputEditText(this);
-
             new MaterialAlertDialogBuilder(this)
                     .setView(R.layout.alert_forgot_password)
                     .setMessage(R.string.message_forgot_password)
