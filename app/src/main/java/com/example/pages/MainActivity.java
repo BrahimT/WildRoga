@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 //        navigateToPaymentTest();
 
         //temporary login test
-        //navigateToLoginTest();
+        navigateToLoginTest();
 
         setContentView(R.layout.activity_main);
 

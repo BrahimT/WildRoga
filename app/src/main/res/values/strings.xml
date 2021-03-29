@@ -42,5 +42,10 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="payments_show_name">%s</string>
+    <string name="text_login_1">Placeholder1</string>
+    <string name="text_login_2">Placeholder2</string>
+    <string name="text_registration_1">Placeholder3</string>
+    <string name="text_registration_2">Placeholder4</string>
+    <string name="login_failed">Placeholder5</string>
 
 </resources>
