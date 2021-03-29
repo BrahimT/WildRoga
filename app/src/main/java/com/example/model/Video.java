@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Video {
-    private int id;
+    private String id;
     private VideoDifficulty difficulty;
     private String title;
     private String thumbnail;
@@ -23,7 +23,7 @@ public class Video {
 
     public Video() { }
 
-    public Video(int id,String videoURL ,VideoDifficulty difficulty, String title, String thumbnail) {
+    public Video(String id,String videoURL ,VideoDifficulty difficulty, String title, String thumbnail) {
         this.id = id;
         this.videoURL = videoURL;
         this.difficulty = difficulty;
@@ -31,11 +31,11 @@ public class Video {
         this.thumbnail = thumbnail;
     }
 
-    public int getId(){
+    public String getId(){
         return this.id;
     }
 
-    public void setId(int id){
+    public void setId(String id){
         this.id = id;
     }
 

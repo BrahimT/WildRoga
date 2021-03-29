@@ -8,16 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 
 import com.example.fragments.FavoritesFragment;
-import com.example.fragments.HomeFragment;
 import com.example.fragments.ProfileFragment;
 import com.example.fragments.VideoFragment;
+import com.example.fragments.ui.login.HomeFragment;
 import com.example.myapplication.R;
 import com.example.pages.ui.login.LoginActivity;
-import com.example.tools.PasswordUtilities;
 import com.example.tools.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_container, fragment)
                 .addToBackStack(null)
