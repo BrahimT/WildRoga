@@ -1,12 +1,19 @@
 package com.example.fragments;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.tools.VideoViewAdapter;
@@ -52,6 +60,8 @@ public class HomeFragment extends Fragment implements VideoViewListener {
 
         hView.setAdapter(hAdapter);
 
+        startDownloading("https://www.dropbox.com/sh/zqhs7u4wk8m8fwa/AADVemggp3pz-Qb1Gu89SzMMa?dl=0&preview=AllLevelsFlow.mp4");
+
         return view;
     }
 
@@ -59,6 +69,44 @@ public class HomeFragment extends Fragment implements VideoViewListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         videoPlayerView.setSource(videos.get(0).getVideoURL());
         videoTitle.setText(videos.get(0).getTitle());
+    }
+
+    public Button addToFavouritesButton(LoggedInUser user, Video video){
+        //Todo get real find button
+        Button b = (Button) getView();
+
+        b.setOnClickListener( (a) ->{
+            user.addVideoToFavourites(video);
+        });
+
+        return b;
+    }
+
+    public Button downloadButton(Video video){
+        Button b = (Button) getView();
+
+        b.setOnClickListener((a )->{
+            startDownloading(video.getVideoURL());
+            //TODO add some type of permissions check
+        });
+
+        return b;
+    }
+
+    //https://www.youtube.com/watch?v=c-SDbITS_R4 consulted
+    private void startDownloading(String url){
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle("Download");
+        request.setDescription("Downloading file...");
+
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "" + System.currentTimeMillis());
+
+        DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(request);
     }
 
     //TEMPORARY METHOD TO LOAD VIDEOS TO LIST | TESTING

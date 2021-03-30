@@ -18,6 +18,7 @@ import com.example.fragments.VideoFragment;
 import com.example.myapplication.R;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.PasswordUtilities;
+import com.example.tools.SessionManager;
 import com.example.tools.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,9 +41,17 @@ public class MainActivity extends AppCompatActivity {
 //        navigateToPaymentTest();
 
         //temporary login test
-        //navigateToLoginTest();
+        navigateToLoginTest();
 
         setContentView(R.layout.activity_main);
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            Log.d("boop", "intent");
+            SessionManager sm = new SessionManager(this);
+            sm.createLogin(bundle.getString("email"));
+            loadFragment(new ProfileFragment());
+        }
         loadFragment(new HomeFragment());
 
         bottomNav = findViewById(R.id.bottom_nav_view);
