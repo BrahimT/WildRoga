@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.myapplication.R;
-import com.example.pages.AboutActivity;
 import com.example.pages.MainActivity;
-import com.example.pages.fibase_database;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class BottomNavigationManager {
@@ -21,7 +19,7 @@ public class BottomNavigationManager {
                     break;
 
                 case R.id.video_activity:
-                    nextActivity = new Intent(currentContext, AboutActivity.class);
+                    //nextActivity = new Intent(currentContext, AboutActivity.class);
                     break;
 
                 case R.id.favorite_activity:

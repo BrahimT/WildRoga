@@ -47,6 +47,7 @@
     <string name="text_login_1">WELCOME BACK!</string>
     <string name="text_login_2">Please Sign In.</string>
     <string name="text_not_logged_in">You are not logged in</string>
+    <string name="login_failed">Login failed</string>
 
 
 </resources>

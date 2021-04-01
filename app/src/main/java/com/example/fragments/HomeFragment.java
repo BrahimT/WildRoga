@@ -3,6 +3,7 @@ package com.example.fragments;
 import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
+import com.example.pages.ViewerActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
 import com.potyvideo.library.AndExoPlayerView;
@@ -60,7 +62,7 @@ public class HomeFragment extends Fragment implements VideoViewListener {
 
         hView.setAdapter(hAdapter);
 
-        startDownloading("https://www.dropbox.com/sh/zqhs7u4wk8m8fwa/AADVemggp3pz-Qb1Gu89SzMMa?dl=0&preview=AllLevelsFlow.mp4");
+        //startDownloading("https://www.dropbox.com/sh/zqhs7u4wk8m8fwa/AADVemggp3pz-Qb1Gu89SzMMa?dl=0&preview=AllLevelsFlow.mp4");
 
         return view;
     }
