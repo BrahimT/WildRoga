@@ -90,7 +90,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
                     firestore.collection("users").add(userToEnter);
 
-                    //TODO redirect to home page. Matt
+                    //redirect to home page. Matt
                     redirectUser();
                 } else {
                     //TODO error message Matt

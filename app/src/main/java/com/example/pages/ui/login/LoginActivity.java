@@ -142,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(this, MainActivity.class));
                 } else {
                     Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    loadingProgressBar.setVisibility(View.INVISIBLE);
                 }
             });
 
