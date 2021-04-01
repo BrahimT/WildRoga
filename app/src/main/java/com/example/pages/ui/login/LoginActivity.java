@@ -28,11 +28,15 @@ import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.tools.PasswordUtilities;
 import com.example.tools.SessionManager;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,6 +47,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private FirebaseAuth mAuth;
     private final FirebaseFirestore FIRESTORE = FirebaseFirestore.getInstance();
 
     @Override
@@ -51,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
+        mAuth = FirebaseAuth.getInstance();
 
         final TextInputEditText usernameEditText = findViewById(R.id.username);
         final TextInputEditText passwordEditText = findViewById(R.id.password);
@@ -127,7 +133,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
             String email = usernameEditText.getText().toString();
-            String password = passwordEditText.toString();
+            Log.d("email", email);
+            String password = passwordEditText.getText().toString();
+            Log.d("passwd", password);
+
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    startActivity(new Intent(this, MainActivity.class));
+                } else {
+                    Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             //TODO use Firebase authentication to check if user exists/log user in.
             // If success redirect to homepage if not stay on login but display error toast - Matt and Max

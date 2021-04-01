@@ -21,6 +21,8 @@ import com.example.tools.PasswordUtilities;
 import com.example.tools.SessionManager;
 import com.example.tools.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private final static int home = R.id.home_activity;
@@ -30,20 +32,17 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferencesManager sharedPreferencesManager = null;
     private SharedPreferences sharedPrefs  = null;
+    private FirebaseAuth mAuth;
 
     BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //temporary payment test
-//        navigateToPaymentTest();
-
-        //temporary login test
-        navigateToLoginTest();
-
         setContentView(R.layout.activity_main);
+
+        //TODO check if user is logged in and redirect to login if not Matt
+        mAuth = FirebaseAuth.getInstance();
 
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
             sm.createLogin(bundle.getString("email"));
             loadFragment(new ProfileFragment());
         }
-        loadFragment(new HomeFragment());
 
         bottomNav = findViewById(R.id.bottom_nav_view);
 
@@ -77,6 +75,17 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser cUser = mAuth.getCurrentUser();
+        if (cUser != null) {
+            loadFragment(new HomeFragment());
+        } else {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
     }
 
     private void loadFragment(Fragment fragment) {

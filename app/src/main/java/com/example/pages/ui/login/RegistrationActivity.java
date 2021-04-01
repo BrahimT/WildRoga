@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.R;
+import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.pages.ui.login.LoginViewModel;
 import com.example.pages.ui.login.LoginViewModelFactory;
@@ -47,7 +48,7 @@ public class RegistrationActivity extends AppCompatActivity {
             if (loginFormState == null) {
                 return;
             }
-            createAccountButton.setEnabled(loginFormState.isDataValid());
+            //createAccountButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getEmailError() != null) {
                 emailEditText.setError(getString(loginFormState.getEmailError()));
             }
@@ -83,6 +84,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     redirectUser();
                 } else {
                     //TODO error message Matt
+                    //TODO display error to user if possible from firebase
+                    //https://stackoverflow.com/questions/37859582/how-to-catch-a-firebase-auth-specific-exceptions
                 }
             });
         });
@@ -121,8 +124,6 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void redirectUser() {
-        startActivity(new Intent(
-                //TODO intent
-                ));
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

@@ -3,6 +3,7 @@ package com.example.fragments;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,10 @@ import com.example.pages.loginData.LoginDataSource;
 import com.example.pages.loginData.LoginRepository;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.pages.ui.login.LoginViewModel;
+import com.example.pages.ui.login.RegistrationActivity;
 import com.example.tools.SessionManager;
 import com.example.tools.SharedPreferencesManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -42,12 +45,10 @@ public class ProfileFragment extends Fragment {
 
         loginButton = view.findViewById(R.id.sign_in_button);
 
-        session = new SessionManager(getActivity());
-
-        session.checkLogin();
-
         loginButton.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), LoginActivity.class));
+            //TODO implement error checks Matt
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getActivity(), LoginActivity.class));
         });
     }
 }
