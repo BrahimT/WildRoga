@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
@@ -24,6 +25,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -71,14 +76,19 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
         createAccountButton.setOnClickListener(v -> {
-            String fullName = nameEditText.getText().toString();
+            String name = nameEditText.getText().toString();
             String email = emailEditText.getText().toString();
             String password = passwordConfirmEditText.getText().toString();
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                 if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    //TODO add user to firestore collection, with full name. Utilize LoggedInUser.class.
+                    LoggedInUser user = new LoggedInUser(mAuth.getCurrentUser(), name);
+
+                    Map<String, LoggedInUser> userToEnter = new HashMap<>();
+                    userToEnter.put(user.getUserId(), user);
+
+                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                    firestore.collection("users").add(userToEnter);
 
                     //TODO redirect to home page. Matt
                     redirectUser();

@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +15,13 @@ public class LoggedInUser implements Serializable {
 
     private String userId;
     private String displayName;
+    private String email;
     private List<Video> favourites;
 
-    public LoggedInUser(String userId, String displayName) {
-        this.userId = userId;
-        this.displayName = displayName;
-        this.favourites = new ArrayList<>();
+    public LoggedInUser(FirebaseUser user, String name){
+        this.userId = user.getUid();
+        this.displayName = name;
+        this.email = user.getEmail();
     }
 
     public String getUserId() {
@@ -27,6 +30,10 @@ public class LoggedInUser implements Serializable {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getEmail(){
+        return this.email;
     }
 
     public List<Video> getFavourites(){ return favourites; }
