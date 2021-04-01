@@ -127,70 +127,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
             String email = usernameEditText.getText().toString();
-            String passwordHash = passwordEditText.toString();
-//            loginViewModel.login(usernameEditText.getText().toString(),
-//                    PasswordUtilities.editTextToCharArray(passwordEditText));
+            String password = passwordEditText.toString();
 
-//            char[] password = PasswordUtilities.editTextToCharArray(passwordEditText);
-//            if(email.equals("test") && PasswordUtilities.verifyPassword(PasswordUtilities.hashPassword(password, PasswordUtilities.getSalt()), "Testing123".toCharArray())) {
-//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                intent.putExtra("email", email);
-//                Log.d("boop", "StartActivity");
-//                startActivity(intent);
-//            }
-//            else{
-//                Log.d("boop", "Error");
-//                Toast.makeText(LoginActivity.this, "Invalid Login !", Toast.LENGTH_SHORT).show();
-//                loadingProgressBar.setVisibility(View.INVISIBLE);
-//            }
-            //Add dummy user to firestore
-            Map<String, String> user = new HashMap<>();
-            user.put("email", email);
-            user.put("passwordHash", "Testing123");
-            FIRESTORE.collection("users").add(user);
-
-            FIRESTORE.collection("users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-
-                    boolean foundUser = false;
-                    DocumentSnapshot snapshot;
-                    for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
-                        snapshot = queryDocumentSnapshots.getDocuments().get(i);
-                        if (snapshot.get("email").toString().equals(email) && snapshot.get("passwordHash").toString().equals(passwordHash)) {
-                            foundUser = true;
-
-                            break;
-                        }
-                    }
-                    if (foundUser) {
-                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                        //    startActivity(new Intent(LoginActivity.this, HomeFragment.class));
-
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("email", email);
-                        Log.d("boop", "StartActivity");
-                        startActivity(intent);
-
-
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Invalid Login !", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                            Toast.makeText(LoginActivity.this, "User Not Found", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-
-
+            //TODO use Firebase authentication to check if user exists/log user in.
+            // If success redirect to homepage if not stay on login but display error toast - Matt and Max
+            // Max: retrieve user data, save to memory (user object)
+            // mAuth.signInWithEmailAndPassword(email, password)
+            // references: https://firebase.google.com/docs/auth/android/password-auth
         });
 
         registerText.setOnClickListener(v -> {
@@ -206,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(this, "TEST: Verification email sent", Toast.LENGTH_SHORT).show();
 
                         //TODO Add firebase forgot password email implementation and error checking with firebase to ensure user exists
+                        // Matt
                     })
                     .show();
 

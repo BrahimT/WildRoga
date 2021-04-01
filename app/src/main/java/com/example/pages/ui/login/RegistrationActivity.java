@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,17 +18,23 @@ import com.example.pages.ui.login.LoginActivity;
 import com.example.pages.ui.login.LoginViewModel;
 import com.example.pages.ui.login.LoginViewModelFactory;
 import com.example.tools.PasswordUtilities;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
+        mAuth = FirebaseAuth.getInstance();
 
         final EditText nameEditText = findViewById(R.id.name_registration);
         final EditText emailEditText = findViewById(R.id.email_registration);
@@ -52,7 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        // TODO fix this method
+        // TODO fix this method MAY NOT BE NEEDED
         loginViewModel.getLoginResult().observe(this, loginResult -> {
             if (loginResult == null) {
                 return;
@@ -60,6 +67,24 @@ public class RegistrationActivity extends AppCompatActivity {
             if (loginResult.getError() != null) {
 
             }
+        });
+
+        createAccountButton.setOnClickListener(v -> {
+            String fullName = nameEditText.getText().toString();
+            String email = emailEditText.getText().toString();
+            String password = passwordConfirmEditText.getText().toString();
+
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    //TODO add user to firestore collection, with full name. Utilize LoggedInUser.class.
+
+                    //TODO redirect to home page. Matt
+                    redirectUser();
+                } else {
+                    //TODO error message Matt
+                }
+            });
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -93,5 +118,11 @@ public class RegistrationActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
+    }
+
+    private void redirectUser() {
+        startActivity(new Intent(
+                //TODO intent
+                ));
     }
 }

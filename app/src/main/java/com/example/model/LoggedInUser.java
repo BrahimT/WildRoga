@@ -1,12 +1,15 @@
 package com.example.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
+ * TODO Helper class implementation for Firebase collections (user object) MAX
+ * Reference: https://stackoverflow.com/questions/47177099/extend-firebase-user
  */
-public class LoggedInUser {
+public class LoggedInUser implements Serializable {
 
     private String userId;
     private String displayName;
