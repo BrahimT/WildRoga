@@ -3,7 +3,6 @@ package com.example.model;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

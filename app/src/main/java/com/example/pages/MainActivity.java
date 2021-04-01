@@ -94,9 +94,4 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
-
-
-    private void navigateToLoginTest(){
-        this.startActivity(new Intent(this, LoginActivity.class));
-    }
 }
