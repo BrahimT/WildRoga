@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -145,12 +147,6 @@ public class LoginActivity extends AppCompatActivity {
                     loadingProgressBar.setVisibility(View.INVISIBLE);
                 }
             });
-
-            //TODO use Firebase authentication to check if user exists/log user in.
-            // If success redirect to homepage if not stay on login but display error toast - Matt and Max
-            // Max: retrieve user data, save to memory (user object)
-            // mAuth.signInWithEmailAndPassword(email, password)
-            // references: https://firebase.google.com/docs/auth/android/password-auth
         });
 
         registerText.setOnClickListener(v -> {
@@ -163,15 +159,24 @@ public class LoginActivity extends AppCompatActivity {
                     .setMessage(R.string.message_forgot_password)
                     .setTitle(R.string.action_forgot_password)
                     .setPositiveButton(R.string.action_send_email, (dialog, which) -> {
-                        Toast.makeText(this, "TEST: Verification email sent", Toast.LENGTH_SHORT).show();
-
-                        //TODO Add firebase forgot password email implementation and error checking with firebase to ensure user exists
-                        // Matt
+                        Dialog d = (Dialog) dialog;
+                        TextInputEditText forgotPasswordEditText = d.findViewById(R.id.alert_email_field);
+                        String emailFP = forgotPasswordEditText.getText().toString();
+                        mAuth.sendPasswordResetEmail(emailFP).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getBaseContext(), R.string.alert_email_sent, Toast.LENGTH_SHORT).show();
+                            } else if (!task.isSuccessful()) {
+                                Log.d("ForgotPass", "Error sending email to: " + emailFP);
+                                //TODO error
+                            }
+                        });
                     })
                     .show();
-
         });
     }
+
+    @Override
+    public void onBackPressed() { }
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
