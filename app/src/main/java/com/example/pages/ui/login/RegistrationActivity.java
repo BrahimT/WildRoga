@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -81,14 +83,13 @@ public class RegistrationActivity extends AppCompatActivity {
             String password = passwordConfirmEditText.getText().toString();
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+
                 if (task.isSuccessful()) {
-                    LoggedInUser user = new LoggedInUser(mAuth.getCurrentUser(), name);
+                    LoggedInUser user = new LoggedInUser(Objects.requireNonNull(mAuth.getCurrentUser()), name);
 
-                    Map<String, LoggedInUser> userToEnter = new HashMap<>();
-                    userToEnter.put(user.getUserId(), user);
-
+                    //TODO make user entry and auth an atomic transaction. Max
                     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                    firestore.collection("users").add(userToEnter);
+                    firestore.collection("users").add(user);
 
                     //redirect to home page. Matt
                     redirectUser();

@@ -15,6 +15,7 @@ import com.example.fragments.FavoritesFragment;
 import com.example.fragments.HomeFragment;
 import com.example.fragments.ProfileFragment;
 import com.example.fragments.VideoFragment;
+import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.PasswordUtilities;
@@ -23,6 +24,10 @@ import com.example.tools.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private final static int home = R.id.home_activity;
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferencesManager sharedPreferencesManager = null;
     private SharedPreferences sharedPrefs  = null;
     private FirebaseAuth mAuth;
+    private LoggedInUser user;
 
     BottomNavigationView bottomNav;
 
@@ -41,22 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO check if user is logged in and redirect to login if not Matt
-        mAuth = FirebaseAuth.getInstance();
-
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            Log.d("boop", "intent");
-            SessionManager sm = new SessionManager(this);
-            sm.createLogin(bundle.getString("email"));
-            loadFragment(new ProfileFragment());
-        }
-
         bottomNav = findViewById(R.id.bottom_nav_view);
-
-        sharedPreferencesManager = new SharedPreferencesManager();
-        sharedPrefs = getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             switch ( item.getItemId() ) {
