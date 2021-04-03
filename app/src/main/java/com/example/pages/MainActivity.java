@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+
         bottomNav = findViewById(R.id.bottom_nav_view);
 
         bottomNav.setOnNavigationItemSelectedListener(item -> {
