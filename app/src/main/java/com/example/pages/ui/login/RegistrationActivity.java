@@ -4,30 +4,45 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
+import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.pages.ui.login.LoginViewModel;
 import com.example.pages.ui.login.LoginViewModelFactory;
 import com.example.tools.PasswordUtilities;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
+        mAuth = FirebaseAuth.getInstance();
 
         final EditText nameEditText = findViewById(R.id.name_registration);
         final EditText emailEditText = findViewById(R.id.email_registration);
@@ -40,7 +55,7 @@ public class RegistrationActivity extends AppCompatActivity {
             if (loginFormState == null) {
                 return;
             }
-            createAccountButton.setEnabled(loginFormState.isDataValid());
+            //createAccountButton.setEnabled(loginFormState.isDataValid());
             if (loginFormState.getEmailError() != null) {
                 emailEditText.setError(getString(loginFormState.getEmailError()));
             }
@@ -52,7 +67,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        // TODO fix this method
+        // TODO fix this method MAY NOT BE NEEDED
         loginViewModel.getLoginResult().observe(this, loginResult -> {
             if (loginResult == null) {
                 return;
@@ -60,6 +75,29 @@ public class RegistrationActivity extends AppCompatActivity {
             if (loginResult.getError() != null) {
 
             }
+        });
+
+        createAccountButton.setOnClickListener(v -> {
+            String name = nameEditText.getText().toString();
+            String email = emailEditText.getText().toString();
+            String password = passwordConfirmEditText.getText().toString();
+
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+
+                if (task.isSuccessful()) {
+                    LoggedInUser user = new LoggedInUser(Objects.requireNonNull(mAuth.getCurrentUser()), name);
+
+                    //TODO make user entry and auth an atomic transaction. Max
+                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                    firestore.collection("users").add(user);
+
+                    redirectUser();
+                } else {
+                    //TODO error message Matt
+                    //TODO display error to user if possible from firebase
+                    //https://stackoverflow.com/questions/37859582/how-to-catch-a-firebase-auth-specific-exceptions
+                }
+            });
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -93,5 +131,9 @@ public class RegistrationActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
+    }
+
+    private void redirectUser() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

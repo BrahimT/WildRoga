@@ -9,6 +9,7 @@
     <string name="profile">Profile</string>
     <string name="whatsnew">What\'s New!</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="alert_email_sent">Email Sent</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_confirm">Confirm password</string>
@@ -29,10 +30,25 @@
     <string name="invalid_password_number">Password must contain at least 1 number</string>
     <string name="invalid_password_confirm">Password entries must match</string>
     <string name="valid_password">Valid</string>
-    <string name="login_failed">Login failed</string>
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_payment">PaymentActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
     <string name="payments_show_name">%s</string>
+    <string name="text_registration_1">CREATE ACCOUNT</string>
+    <string name="text_registration_2">You Belong Here.</string>
+    <string name="text_login_1">WELCOME BACK!</string>
+    <string name="text_login_2">Please Sign In.</string>
+    <string name="text_not_logged_in">You are not logged in</string>
+    <string name="login_failed">Login failed</string>
 
 
 </resources>

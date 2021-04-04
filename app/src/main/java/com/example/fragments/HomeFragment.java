@@ -1,12 +1,21 @@
 package com.example.fragments;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,10 +24,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
+import com.example.pages.ViewerActivity;
+import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.potyvideo.library.AndExoPlayerView;
 
 import java.util.ArrayList;
@@ -33,11 +48,43 @@ public class HomeFragment extends Fragment implements VideoViewListener {
     private AndExoPlayerView videoPlayerView;
     private TextView videoTitle;
 
+    private FirebaseAuth mAuth;
+    private LoggedInUser user;
+
     public HomeFragment() { }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //Verify if user is logged in to Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = mAuth.getCurrentUser();
+
+        //Redirect to login if user not in Firebase Auth
+        if(fbUser == null){
+            this.startActivity(new Intent(getActivity(), LoginActivity.class));
+        }else{
+
+            //TODO add error handling if user in Auth but not Firestore - Max
+
+            //Get associated user data from Firestore
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("users")
+                    .whereEqualTo("userId", fbUser.getUid())
+                    .get()
+                    .addOnCompleteListener(task ->{
+                        if(task.isSuccessful()){
+                            List<LoggedInUser> users = task.getResult().toObjects(LoggedInUser.class);
+                            if(users.size() == 1){
+                                user = users.get(0);
+                                Log.d("user", user.getDisplayName());
+                            }
+
+                        }
+                    });
+        }
+
         v = new Video();
 
         hView = view.findViewById(R.id.recycler_home);
@@ -52,6 +99,8 @@ public class HomeFragment extends Fragment implements VideoViewListener {
 
         hView.setAdapter(hAdapter);
 
+        //startDownloading("https://www.dropbox.com/sh/zqhs7u4wk8m8fwa/AADVemggp3pz-Qb1Gu89SzMMa?dl=0&preview=AllLevelsFlow.mp4");
+
         return view;
     }
 
@@ -61,10 +110,47 @@ public class HomeFragment extends Fragment implements VideoViewListener {
         videoTitle.setText(videos.get(0).getTitle());
     }
 
+    public Button addToFavouritesButton(LoggedInUser user, Video video){
+        //Todo get real find button
+        Button b = (Button) getView();
+
+        b.setOnClickListener( (a) ->{
+            user.addVideoToFavourites(video);
+        });
+
+        return b;
+    }
+
+    public Button downloadButton(Video video){
+        Button b = (Button) getView();
+
+        b.setOnClickListener((a )->{
+            startDownloading(video.getVideoURL());
+            //TODO add some type of permissions check
+        });
+
+        return b;
+    }
+
+    //https://www.youtube.com/watch?v=c-SDbITS_R4 consulted
+    private void startDownloading(String url){
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle("Download");
+        request.setDescription("Downloading file...");
+
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "" + System.currentTimeMillis());
+
+        DownloadManager manager = (DownloadManager)getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(request);
+    }
+
     //TEMPORARY METHOD TO LOAD VIDEOS TO LIST | TESTING
     public List<Video> loadVideos() {
         videos = new ArrayList<>();
-
 
         videos.add(new Video(1,"https://www.dropbox.com/sh/zqhs7u4wk8m8fwa/AADVemggp3pz-Qb1Gu89SzMMa?dl=0&preview=AllLevelsFlow.mp4"
                 , null, "AllLevelsFlow", "https://uca69d3cbc6c03e5b3b892bbc1fb.previews.dropboxusercontent.com/p/thumb/ABGBHC97vIAR5NdJF4tv6oPIfwsp0Th2x90-JQFZItazbzaYWWXwhmkmLhDNrEXKEQt6B8pLAzyzn-9RqRvmQXjIm8hNQiArXLi4TPqls-iSbBAoTakbHNrUjCeWLCeUEnAAi_9Ge4MNQTVFBBEY3YrhjV-E34aCjsVRouQqG0_b8pnfspA5GKwwJcvpEzuwx7tDJHOurTpbd-6ylIYKTUTNwsVsiQX92fPfNtk3en3SGLjjT9-8qmFL0VCs7jNkNvE1CT57-c030AcKQoxJ1Ur8Ag7b6AuwrbQbe6j05wCc6w/p.jpeg?size=178x178&size_mode=1"));
@@ -96,7 +182,6 @@ public class HomeFragment extends Fragment implements VideoViewListener {
                 null, "Ro Nwosu", "https://uc412b1c55f9b382ecd234e22133.previews.dropboxusercontent.com/p/thumb/ABHQD4FfPsVeIrXHzD81a0fLTeuszzhucS78qKiiBJsY7HbAmWVTg4aSMRE6ppKMSg_Nx3o8uQu__PVjYxBnDvFk2rp975JgOe2eBva3o1HJuX6A3ECcti1-AYWs8rGE6kbhF0spyUbN44Env128gnkaJghaGV-n5af7k4rRL_hqPlPOpEayK_RWrYmcsXbZH0CfvgkUOV_pKUuAqwUcmxI0W5W4GZQ3zjDdbmlLSOGHCZqKIrlPJ5HhLxNb-N0i4sAuwspz4TMU0zCKCkCBIN5KNW6FJWiPJQY89vsxPxrL72mu6ltK6xWwMxCIyBsWAzfT26GIh3Q3tjFGSsFXSUU6nVtlSX7tc_5PM5aSWQ3NN6FNne-yrHpXj5JQhOZrukZvwNCibIhaiRx4wdpReuAoDLuZIcIrRKtq-5FY1FXZDP10qzTPOTbQSVLMOhXvZL7VOichEajIdwOo3Cw-wUKpO8BEhTDRwdZwxaacUTtda7QUMQ5t48CaZZxFWyEtwfHQadGZdBwfCa5Am8gOUb5Cei_zq2nRpMIR_dBpMn6b52foq4ChEAzEIHI76Z1uf0LovDlf9QcM9PhTLYTDvpskxQB5r1oLG36GNYqSVYBzEK3_ee_qwSDzMDow751b5KJtwQiDueQY2FCuppvICj9c/p.jpeg?size=178x178&size_mode=1"));
         videos.add(new Video(15,"https://www.dropbox.com/sh/zqhs7u4wk8m8fwa/AAC6c4Zma7eyMwykHbGaQUcia/Stretch%20Remix%201.mp4?dl=0",
                 null, "Stretch Remix 1", "https://uc6900de153a3119112a62e2018f.previews.dropboxusercontent.com/p/thumb/ABH8J-waTGVbKZbH2sybHRbkRs38c4HcZaT2HuCtRFN1W4Iz9gTXZvfn1_WypgSPv8EAgLRaXUTHftTd4SmwJxi8zLmr9YHmwInZ70uV-swrtF-L0WpbE7fP4_xEF3zz78sIXopobCUby8hOkd2Bk_FezyPcPvn9eTfhITglDwLDoKfmB81Nz5JuUgv-9o5YvgaMTCI0q3oPf1AtWmKqQavjny3dxIlTwfdFqvcLnEKYM9qkEi8udPd4O4IY4dvXXkLXh4eBFTJeJ0ToNVEmIXv4u1w_86pYesFKxVCIgXJ1Fg/p.jpeg?size=178x178&size_mode=1"));
-
 
         return videos;
     }

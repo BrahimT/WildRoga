@@ -36,7 +36,7 @@ public class LoginDataSource {
 //            if(dbh.checkExists(username, password)){
 //            }
             if(username.contentEquals("test") && PasswordUtilities.verifyPassword(PasswordUtilities.hashPassword("Testing123".toCharArray(), PasswordUtilities.getSalt()), password)){
-                 return new Result.Success<>(new LoggedInUser(java.util.UUID.randomUUID().toString(), username));
+//                 return new Result.Success<>(new LoggedInUser(java.util.UUID.randomUUID().toString(), username));
             }
         }catch(Exception e){
             e.printStackTrace();
