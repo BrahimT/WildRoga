@@ -36,6 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private FirebaseAuth mAuth;
+    private final FirebaseFirestore FIRESTORE = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,16 +81,26 @@ public class RegistrationActivity extends AppCompatActivity {
         createAccountButton.setOnClickListener(v -> {
             String name = nameEditText.getText().toString();
             String email = emailEditText.getText().toString();
-            String password = passwordConfirmEditText.getText().toString();
 
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+            byte[] passwordHash = PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordConfirmEditText));
+
+            Map<String, Object> saltToAdd = new HashMap<>();
+            saltToAdd.put("email", email);
+            saltToAdd.put("salt", PasswordUtilities.getSaltFromHashedPassword(passwordHash, 16));
+            FIRESTORE.collection("salts").add(saltToAdd);
+
+            mAuth.createUserWithEmailAndPassword(email, PasswordUtilities.byteArrayToString(passwordHash)).addOnCompleteListener(this, task -> {
 
                 if (task.isSuccessful()) {
                     LoggedInUser user = new LoggedInUser(Objects.requireNonNull(mAuth.getCurrentUser()), name);
 
-                    //TODO make user entry and auth an atomic transaction. Max
-                    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                    firestore.collection("users").add(user);
+                    //TODO error message Matt
+                    //Add user data to firestore, rollback auth user on failure
+                    FIRESTORE.collection("users").add(user).addOnFailureListener( this, storeTask ->{
+                        mAuth.getCurrentUser().delete();
+                    });
+
+
 
                     redirectUser();
                 } else {

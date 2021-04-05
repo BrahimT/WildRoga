@@ -35,6 +35,10 @@ public class PasswordUtilities {
 
         return salt;
     }
+
+    public static byte[] hashPassword(char[] password){
+        return hashPassword(password, getSalt());
+    }
     //https://www.baeldung.com/java-password-hashing consulted
     public static byte[] hashPassword(char[] password, byte[] salt){
 

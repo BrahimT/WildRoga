@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.tools.PasswordUtilities;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private FirebaseAuth mAuth;
     private final FirebaseFirestore FIRESTORE = FirebaseFirestore.getInstance();
+    private byte[] salt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,6 +141,29 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("email", email);
             String password = passwordEditText.getText().toString();
             Log.d("passwd", password);
+
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("salts")
+                    //TODO find correct query
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnCompleteListener(task ->{
+                        if(task.isSuccessful()){
+                            //salt = result;
+                            QuerySnapshot salts = task.getResult();
+
+                            if(salts.size() == 1){
+                                salt = (byte[]) salts.getDocuments().get(0).getData().get("salt");
+                            }else{
+                                //redirect login failed
+                            }
+                        }
+                        else{
+                            //redirect login failed
+                        }
+                    });
+
+            String hashedPassword = PasswordUtilities.byteArrayToString(PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordEditText), salt));
 
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
                 if (task.isSuccessful()) {
