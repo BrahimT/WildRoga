@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.db.VideoDB;
 import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.tools.VideoViewAdapter;
@@ -35,16 +38,18 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
     private List<Video> videos;
     private AndExoPlayerView videoPlayerView;
     private TextView videoTitle;
+    private Button addToFavorites;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private VideoDB videoDB;
+    private Video currentVideo;
 
     public WatchVideoFragment() { }
 
-    public static WatchVideoFragment newInstance(String videoURL, String title) {
+    public static WatchVideoFragment newInstance(Video video) {
         WatchVideoFragment myFragment = new WatchVideoFragment();
 
         Bundle args = new Bundle();
-        args.putString("videoURL", videoURL);
-        args.putString("title", title);
+        args.putSerializable("video", video);
         myFragment.setArguments(args);
 
         return myFragment;
@@ -58,9 +63,12 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
         hView = view.findViewById(R.id.recycler_home);
         videoPlayerView = view.findViewById(R.id.videoPlayerView);
         videoTitle = view.findViewById(R.id.videoTitle);
+        addToFavorites = view.findViewById(R.id.addToFavorites);
 
         hManager = new LinearLayoutManager(getActivity());
         hView.setLayoutManager(hManager);
+
+        videoDB = new VideoDB(getActivity());
 
         loadVideos();
 
@@ -71,8 +79,10 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
-            videoPlayerView.setSource(getArguments().getString("videoURL"));
-            videoTitle.setText(getArguments().getString("title"));
+            currentVideo = (Video) getArguments().getSerializable("video");
+            videoPlayerView.setSource(currentVideo.getVideoURL());
+            videoTitle.setText(currentVideo.getTitle());
+            setupFavorites(currentVideo);
         }
     }
 
@@ -115,7 +125,40 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
 
     @Override
     public void onVideoClick(Video video) {
+        currentVideo= video;
         videoPlayerView.setSource(video.getVideoURL());
         videoTitle.setText(video.getTitle());
+        setupFavorites(video);
+    }
+
+    private void setupFavorites(Video video) {
+        if (videoDB.exists(video.getId())){
+            addToFavorites.setText("Unsave");
+            addToFavorites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (videoDB.delete(video.getId())){
+                        Toast.makeText(getActivity(), "Deleted from Favorites", Toast.LENGTH_SHORT).show();
+                        setupFavorites(video);
+                    } else{
+                        Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else{
+            addToFavorites.setText("Save");
+            addToFavorites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!videoDB.exists(video.getId())){
+                        videoDB.insertData(video.getId(),video.getTitle(),video.getVideoURL(),video.getThumbnail());
+                        setupFavorites(video);
+                        Toast.makeText(getActivity(), "Added to Favorites", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Already in Favorites", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }

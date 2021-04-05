@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -12,6 +13,7 @@
         android:orientation="horizontal">
 
         <SearchView
+            android:id="@+id/searchview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -25,6 +27,20 @@
             android:drawableRight="@drawable/ic_filter"/>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter by Category:"/>
+
+    <Spinner
+        android:id="@+id/spCategories"
+        tools:listitem="@layout/support_simple_spinner_dropdown_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_video"

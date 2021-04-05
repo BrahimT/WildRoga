@@ -61,6 +61,11 @@ public class VideoViewAdapter extends RecyclerView.Adapter<VideoViewAdapter.View
         this.videos = videos;
     }
 
+    public void setVideos(List<Video> tempFavs) {
+        this.videos = tempFavs;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView videoThumbnail;
         private final TextView videoTitle;
