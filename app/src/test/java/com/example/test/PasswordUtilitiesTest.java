@@ -44,6 +44,18 @@ public class PasswordUtilitiesTest {
         assertTrue(PasswordUtilities.byteArrayContentEquals(saltHash, test));
     }
 
+    @Test
+    public void testSaltConversion(){
+        byte[] salt = PasswordUtilities.getSalt();
+
+        String saltString = PasswordUtilities.byteArrayToString(salt);
+
+        byte[] newSalt = PasswordUtilities.stringToByteArray(saltString);
+
+        assertTrue(PasswordUtilities.byteArrayContentEquals(salt, newSalt));
+
+    }
+
     private byte[] generateSaltHash(){
         byte[] saltHash = new byte[20];
         for(int i = 0; i < 16; i++){

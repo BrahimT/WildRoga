@@ -8,11 +8,18 @@
     <string name="about">About</string>
     <string name="profile">Profile</string>
     <string name="whatsnew">What\'s New!</string>
-    <string name="title_activity_login">LoginActivity</string>
+
+    <!-- Alerts -->
+    <string name="alert_email_sent">Email Sent</string>
+    <string name="alert_email_empty">Please enter your email…</string>
+
+    <!-- Prompts -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_confirm">Confirm password</string>
     <string name="prompt_name">Full Name</string>
+
+    <!-- Actions -->
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_register_short">Register</string>
@@ -21,18 +28,27 @@
     <string name="action_forgot_password">Forgot password?</string>
     <string name="action_account_exists">Already have an account?</string>
     <string name="action_send_email">Send Email</string>
-    <string name="message_forgot_password">Enter your email address and we\'ll send you a recovery link.</string>
-    <string name="welcome">"Welcome !"</string>
+
+    <!-- UI Error Messages -->
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password_length">Password must contain at least 9 characters</string>
     <string name="invalid_password_capital">Password must contain at least 1 capital letter</string>
     <string name="invalid_password_number">Password must contain at least 1 number</string>
     <string name="invalid_password_confirm">Password entries must match</string>
-    <string name="valid_password">Valid</string>
-    <string name="login_failed">Login failed</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_payment">PaymentActivity</string>
-    <string name="payments_show_name">%s</string>
 
+    <!-- General Text -->
+    <string name="text_registration_1">CREATE ACCOUNT</string>
+    <string name="text_registration_2">You Belong Here.</string>
+    <string name="text_login_1">WELCOME BACK!</string>
+    <string name="text_login_2">Please Sign In.</string>
+    <string name="text_not_logged_in">You are not logged in</string>
+
+    <!-- Misc -->
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="message_forgot_password">Enter your email address and we\'ll send you a recovery link.</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="valid_password">Valid</string>
+    <string name="payments_show_name">%s</string>
+    <string name="login_failed">Login failed</string>
 
 </resources>
