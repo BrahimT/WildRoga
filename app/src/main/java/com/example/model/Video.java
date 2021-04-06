@@ -9,15 +9,17 @@ import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.google.gson.internal.bind.ArrayTypeAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Video {
+public class Video implements Serializable {
     private int id;
     private VideoDifficulty difficulty;
     private String title;
     private String thumbnail;
     private String videoURL;
+    private String category;
 
     List<Video> videoList = new ArrayList<>();
 
@@ -81,5 +83,13 @@ public class Video {
 
     public void setVideoList(List<Video> videoList) {
         this.videoList = videoList;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

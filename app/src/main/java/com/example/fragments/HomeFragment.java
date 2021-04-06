@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,12 @@ import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.pages.ViewerActivity;
+import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.potyvideo.library.AndExoPlayerView;
 
 import java.util.ArrayList;
@@ -43,11 +48,43 @@ public class HomeFragment extends Fragment implements VideoViewListener {
     private AndExoPlayerView videoPlayerView;
     private TextView videoTitle;
 
+    private FirebaseAuth mAuth;
+    private LoggedInUser user;
+
     public HomeFragment() { }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //Verify if user is logged in to Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = mAuth.getCurrentUser();
+
+        //Redirect to login if user not in Firebase Auth
+        if(fbUser == null){
+            this.startActivity(new Intent(getActivity(), LoginActivity.class));
+        }else{
+
+            //TODO add error handling if user in Auth but not Firestore - Max
+
+            //Get associated user data from Firestore
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("users")
+                    .whereEqualTo("userId", fbUser.getUid())
+                    .get()
+                    .addOnCompleteListener(task ->{
+                        if(task.isSuccessful()){
+                            List<LoggedInUser> users = task.getResult().toObjects(LoggedInUser.class);
+                            if(users.size() == 1){
+                                user = users.get(0);
+                                Log.d("user", user.getDisplayName());
+                            }
+
+                        }
+                    });
+        }
+
         v = new Video();
 
         hView = view.findViewById(R.id.recycler_home);

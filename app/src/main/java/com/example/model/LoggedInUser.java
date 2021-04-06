@@ -17,6 +17,10 @@ public class LoggedInUser implements Serializable {
     private String email;
     private List<Video> favourites;
 
+    //Required no-arg constructor
+    public LoggedInUser(){
+    }
+
     public LoggedInUser(FirebaseUser user, String name){
         this.userId = user.getUid();
         this.displayName = name;
