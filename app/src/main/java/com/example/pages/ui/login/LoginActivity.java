@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -162,6 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                         Dialog d = (Dialog) dialog;
                         TextInputEditText forgotPasswordEditText = d.findViewById(R.id.alert_email_field);
                         String emailFP = forgotPasswordEditText.getText().toString();
+
                         mAuth.sendPasswordResetEmail(emailFP).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 Toast.makeText(getBaseContext(), R.string.alert_email_sent, Toast.LENGTH_SHORT).show();
