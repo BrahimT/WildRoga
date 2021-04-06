@@ -47,6 +47,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -144,35 +145,39 @@ public class LoginActivity extends AppCompatActivity {
 
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
             firestore.collection("salts")
-                    //TODO find correct query
-                    .whereEqualTo("email", email)
+                    .document(email)
                     .get()
                     .addOnCompleteListener(task ->{
                         if(task.isSuccessful()){
                             //salt = result;
-                            QuerySnapshot salts = task.getResult();
+                            DocumentSnapshot saltSnapshot = task.getResult();
 
-                            if(salts.size() == 1){
-                                salt = (byte[]) salts.getDocuments().get(0).getData().get("salt");
-                            }else{
+
+                            if(saltSnapshot != null && saltSnapshot.exists()){
+                                salt = PasswordUtilities.stringToByteArray((String) Objects.requireNonNull(saltSnapshot.get("salt")));
+
+                                String hashedPassword = PasswordUtilities.byteArrayToString(PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordEditText), salt));
+
+                                mAuth.signInWithEmailAndPassword(email, hashedPassword).addOnCompleteListener(this, loginTask -> {
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(this, MainActivity.class));
+                                    } else {
+                                        Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                        loadingProgressBar.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+                            }
+                            else{
                                 //redirect login failed
+                                Log.d("LoginError", "Salt not exists");
                             }
                         }
-                        else{
-                            //redirect login failed
-                        }
+                    }).addOnFailureListener(e->{
+                //redirect login failed
+                Log.d("LoginError", "Get salt from firebase failed");
                     });
 
-            String hashedPassword = PasswordUtilities.byteArrayToString(PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordEditText), salt));
 
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(this, MainActivity.class));
-                } else {
-                    Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
-                    loadingProgressBar.setVisibility(View.INVISIBLE);
-                }
-            });
         });
 
         registerText.setOnClickListener(v -> {

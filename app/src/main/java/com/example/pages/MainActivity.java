@@ -73,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if(mAuth == null){
+            mAuth = FirebaseAuth.getInstance();
+        }
+
         FirebaseUser cUser = mAuth.getCurrentUser();
         if (cUser != null) {
             loadFragment(new HomeFragment());

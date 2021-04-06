@@ -4,15 +4,21 @@ import android.text.Editable;
 import android.util.Log;
 import android.widget.EditText;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordUtilities {
+
+    private static final Charset ASCII = StandardCharsets.US_ASCII;
 
     public static char[] editTextToCharArray(EditText et){
         Editable text = et.getText();
@@ -39,6 +45,7 @@ public class PasswordUtilities {
     public static byte[] hashPassword(char[] password){
         return hashPassword(password, getSalt());
     }
+
     //https://www.baeldung.com/java-password-hashing consulted
     public static byte[] hashPassword(char[] password, byte[] salt){
 
@@ -177,7 +184,15 @@ public class PasswordUtilities {
         return s;
     }
 
-    public static String byteArrayToString(byte[] ba){
+    public static byte[] stringToByteArray (String s){
+        byte[] ba = new byte[s.length()];
+        for(int i = 0; i < s.length(); i++){
+            ba[i] = (byte) s.charAt(i);
+        }
+        return ba;
+    }
+
+    public static String byteArrayToString (byte[] ba){
         String s = "";
         for(int i = 0; i < ba.length; i++){
             s += (char) ba[i];
@@ -186,4 +201,30 @@ public class PasswordUtilities {
         return s;
     }
 
+    //https://www.baeldung.com/java-string-to-byte-array consulted
+//    public static byte[] stringToByteArray(String s){
+//        return s.getBytes(ASCII);
+//    }
+//
+//    public static String byteArrayToString(byte[] ba){
+//        return new String(ba, ASCII);
+//    }
+
+    public static List<Byte> byteArrayToList(byte[] ba){
+        List<Byte> byteList = new ArrayList<>();
+        for(int i = 0; i < ba.length; i++){
+            byteList.add(i, ba[i]);
+        }
+
+        return byteList;
+    }
+
+    public static byte[] listToByteArray(List<Byte> bl){
+        byte[] ba = new byte[bl.size()];
+        for(int i = 0; i < bl.size(); i++){
+            ba[i] = bl.get(i);
+        }
+
+        return ba;
+    }
 }

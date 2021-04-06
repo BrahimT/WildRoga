@@ -74,7 +74,7 @@ public class FavoritesFragment extends Fragment implements VideoViewListener {
 
     @Override
     public void onVideoClick(Video video) {
-        WatchVideoFragment fragment = WatchVideoFragment.newInstance(video);
-        ((MainActivity)getActivity()).loadFragment(fragment);
+//        WatchVideoFragment fragment = WatchVideoFragment.newInstance(video);
+//        ((MainActivity)getActivity()).loadFragment(fragment);
     }
 }

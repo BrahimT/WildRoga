@@ -92,7 +92,7 @@ public class VideoDB extends SQLiteOpenHelper {
                 String thumbnail = c.getString(c.getColumnIndex(COL_THUMBNAIL));
 
                 Video video = new Video();
-                video.setId(id);
+                video.setId(Integer.parseInt(id));
                 video.setTitle(title);
                 video.setVideoURL(url);
                 video.setThumbnail(thumbnail);

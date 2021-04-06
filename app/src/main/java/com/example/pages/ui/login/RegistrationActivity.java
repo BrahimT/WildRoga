@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -82,12 +83,12 @@ public class RegistrationActivity extends AppCompatActivity {
             String name = nameEditText.getText().toString();
             String email = emailEditText.getText().toString();
 
-            byte[] passwordHash = PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordConfirmEditText));
 
-            Map<String, Object> saltToAdd = new HashMap<>();
-            saltToAdd.put("email", email);
-            saltToAdd.put("salt", PasswordUtilities.getSaltFromHashedPassword(passwordHash, 16));
-            FIRESTORE.collection("salts").add(saltToAdd);
+            byte[] passwordHash = PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordConfirmEditText), PasswordUtilities.getSalt());
+
+            Map<String, String> saltToStore = new HashMap<>();
+            saltToStore.put("salt", PasswordUtilities.byteArrayToString(PasswordUtilities.getSaltFromHashedPassword(passwordHash, 16)));
+            FIRESTORE.collection("salts").document(email).set(saltToStore);
 
             mAuth.createUserWithEmailAndPassword(email, PasswordUtilities.byteArrayToString(passwordHash)).addOnCompleteListener(this, task -> {
 
