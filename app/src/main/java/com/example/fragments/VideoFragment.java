@@ -43,7 +43,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
     private List<Video> videos;
     private List<String> categories;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final String videoCategoryId = "2rwKoGK76Y4wsaLAX0wZ";
+    private final String videoCategoryId = "categoriesDoc";
 
     public VideoFragment() { }
 
@@ -113,11 +113,11 @@ public class VideoFragment extends Fragment implements VideoViewListener {
         db.collection("VideoCategories").document(videoCategoryId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.get("categories")!=null) {
+                if (documentSnapshot.get("category")!=null) {
                     categories = new ArrayList<>();
                     categories.add("--Select Category--");
 
-                    List<String> list = (List<String>) documentSnapshot.get("categories");
+                    List<String> list = (List<String>) documentSnapshot.get("category");
                     categories.addAll(list);
                     ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, categories);
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
