@@ -30,11 +30,13 @@
     <string name="action_send_email">Send Email</string>
 
     <!-- UI Error Messages -->
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_name">Your name is required</string>
     <string name="invalid_password_length">Password must contain at least 9 characters</string>
     <string name="invalid_password_capital">Password must contain at least 1 capital letter</string>
     <string name="invalid_password_number">Password must contain at least 1 number</string>
     <string name="invalid_password_confirm">Password entries must match</string>
+    <string name="invalid_email">Please enter a valid email address</string>
+    <string name="existing_email">The email address is already in use</string>
 
     <!-- General Text -->
     <string name="text_registration_1">CREATE ACCOUNT</string>
@@ -43,11 +45,15 @@
     <string name="text_login_2">Please Sign In.</string>
     <string name="text_not_logged_in">You are not logged in</string>
 
+    <!-- Confirmation -->
+    <string name="valid_password">Valid</string>
+    <string name="valid_confirm_password">Valid</string>
+
     <!-- Misc -->
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_payment">PaymentActivity</string>
     <string name="message_forgot_password">Enter your email address and we\'ll send you a recovery link.</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="valid_password">Valid</string>
     <string name="payments_show_name">%s</string>
     <string name="login_failed">Login failed</string>
 

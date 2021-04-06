@@ -47,6 +47,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -71,68 +72,70 @@ public class LoginActivity extends AppCompatActivity {
         final TextView registerText = findViewById(R.id.register);
         final TextView forgotPassText = findViewById(R.id.forgot_password);
 
-        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
-            if (loginFormState == null) {
-                return;
-            }
-            loginButton.setEnabled(loginFormState.isDataValid());
-
-            //Email Entry Error
-            if (loginFormState.getEmailError() != null) {
-                usernameLayout.setError(getString(loginFormState.getEmailError()));
-            } else {
-                usernameLayout.setError(null);
-            }
-
-            //Password Entry Error
-            if (loginFormState.getPasswordError() != null) {
-                passwordLayout.setError(getString(loginFormState.getPasswordError()));
-            } else {
-                passwordLayout.setError(null);
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
-            if (loginResult == null) {
-                return;
-            }
-            loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult.getError() != null) {
-                showLoginFailed(loginResult.getError());
-            }
-            if (loginResult.getSuccess() != null) {
-                updateUiWithUser(loginResult.getSuccess());
-            }
-            setResult(Activity.RESULT_OK);
-
-            //Complete and destroy login activity once successful
-            finish();
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        PasswordUtilities.editTextToCharArray(passwordEditText));
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        PasswordUtilities.editTextToCharArray(passwordEditText));
-            }
-            return false;
-        });
+//        TODO check if this is needed for anything, not required to do pass/email error checking on login screen - Matt
+//        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
+//            if (loginFormState == null) {
+//                return;
+//            }
+//            loginButton.setEnabled(loginFormState.isDataValid());
+//
+//            //Email Entry Error
+//            if (loginFormState.getEmailError() != null) {
+//                usernameLayout.setError(getString(loginFormState.getEmailError()));
+//            } else {
+//                usernameLayout.setError(null);
+//            }
+//
+//            //Password Entry Error
+//            if (loginFormState.getPasswordError() != null) {
+//                passwordLayout.setError(getString(loginFormState.getPasswordError()));
+//            } else {
+//                passwordLayout.setError(null);
+//            }
+//        });
+//
+//        loginViewModel.getLoginResult().observe(this, loginResult -> {
+//            if (loginResult == null) {
+//                return;
+//            }
+//            loadingProgressBar.setVisibility(View.GONE);
+//            if (loginResult.getError() != null) {
+//                showLoginFailed(loginResult.getError());
+//            }
+//            if (loginResult.getSuccess() != null) {
+//                updateUiWithUser(loginResult.getSuccess());
+//            }
+//            setResult(Activity.RESULT_OK);
+//
+//            //Complete and destroy login activity once successful
+//            finish();
+//        });
+//
+//        TextWatcher afterTextChangedListener = new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+//                        PasswordUtilities.editTextToCharArray(passwordEditText));
+//            }
+//        };
+//        usernameEditText.addTextChangedListener(afterTextChangedListener);
+//
+//        passwordEditText.addTextChangedListener(afterTextChangedListener);
+//        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                loginViewModel.login(usernameEditText.getText().toString(),
+//                        PasswordUtilities.editTextToCharArray(passwordEditText));
+//            }
+//            return false;
+//        });
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
@@ -163,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.action_send_email, (dialog, which) -> {
                         Dialog d = (Dialog) dialog;
                         TextInputEditText forgotPasswordEditText = d.findViewById(R.id.alert_email_field);
-                        String emailFP = forgotPasswordEditText.getText().toString();
+                        String emailFP = Objects.requireNonNull(forgotPasswordEditText.getText()).toString();
 
                         mAuth.sendPasswordResetEmail(emailFP).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
