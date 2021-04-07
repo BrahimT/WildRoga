@@ -166,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         startActivity(new Intent(this, MainActivity.class));
                                     } else {
+                                        //TODO implement firebase exceptions - Matt
                                         Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
                                         loadingProgressBar.setVisibility(View.INVISIBLE);
                                     }
