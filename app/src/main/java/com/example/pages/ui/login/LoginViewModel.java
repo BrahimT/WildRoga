@@ -7,8 +7,7 @@ import androidx.lifecycle.ViewModel;
 import android.content.Context;
 import android.util.Patterns;
 
-import com.example.pages.loginData.LoginRepository;
-import com.example.pages.loginData.Result;
+
 import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
 import com.example.tools.PasswordUtilities;
@@ -18,11 +17,6 @@ public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
-
-    LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
-    }
 
     LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
@@ -31,18 +25,6 @@ public class LoginViewModel extends ViewModel {
     //add username/email to the return
     LiveData<LoginResult> getLoginResult() {
         return loginResult;
-    }
-
-    public void login(String username, char[] password) {
-        // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
     }
 
     public void loginDataChanged(String email, char[] password) {

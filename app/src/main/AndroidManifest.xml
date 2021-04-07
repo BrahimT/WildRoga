@@ -15,10 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity android:name="com.example.pages.ViewerActivity"></activity>
-        <activity
-            android:name="com.example.pages.PaymentActivity"
-            android:label="@string/title_activity_payment"
-            android:theme="@style/NoActionBar" />
         <activity android:name="com.example.pages.ui.login.splashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

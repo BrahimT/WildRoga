@@ -14,8 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
-import com.example.pages.loginData.LoginDataSource;
-import com.example.pages.loginData.LoginRepository;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.pages.ui.login.LoginViewModel;
 import com.example.pages.ui.login.RegistrationActivity;

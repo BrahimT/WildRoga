@@ -131,10 +131,10 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        PasswordUtilities.editTextToCharArray(passwordEditText));
-            }
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                loginViewModel.login(usernameEditText.getText().toString(),
+//                        PasswordUtilities.editTextToCharArray(passwordEditText));
+//            }
             return false;
         });
 
