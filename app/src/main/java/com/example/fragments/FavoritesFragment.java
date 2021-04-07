@@ -71,7 +71,7 @@ public class FavoritesFragment extends Fragment implements VideoViewListener {
 
         vView.setAdapter(vAdapter);
     }
-
+//    TODO cannot find symbol error when running app
     @Override
     public void onVideoClick(Video video) {
 //        WatchVideoFragment fragment = WatchVideoFragment.newInstance(video);

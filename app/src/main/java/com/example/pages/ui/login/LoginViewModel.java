@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Patterns;
 
 
@@ -28,38 +29,59 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void loginDataChanged(String email, char[] password) {
+    public void login(String username, char[] password) {
+        // can be launched in a separate asynchronous job
+        Result<LoggedInUser> result = loginRepository.login(username, password);
 
+        if (result instanceof Result.Success) {
+            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+        } else {
+            loginResult.setValue(new LoginResult(R.string.login_failed));
+        }
+    }
+
+//    TODO Can probably be removed - Matt
+//    public void loginDataChanged(String email, char[] password) {
+//
+//        int passwordMessage = isPasswordValid(password);
+//
+//        if (!isEmailNameValid(email)) {
+//            loginFormState.setValue(new LoginFormState(R.string.invalid_email, null));
+//        } else if (passwordMessage != R.string.valid_password) {
+//            loginFormState.setValue(new LoginFormState(null, passwordMessage));
+//        } else {
+//            loginFormState.setValue(new LoginFormState(true));
+//        }
+//    }
+
+    public void registrationDataChanged(String name, String email, char[] password, char[] passwordConfirm) {
         int passwordMessage = isPasswordValid(password);
+        int confirmMessage = isPasswordConfirmed(password, passwordConfirm);
 
-        if (!isEmailNameValid(email)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+        if (!isNameValid(name)) {
+            loginFormState.setValue(new LoginFormState(R.string.invalid_name, null, null, null));
+        } else if (!isEmailNameValid(email)) {
+            loginFormState.setValue(new LoginFormState(null, R.string.invalid_email, null, null));
         } else if (passwordMessage != R.string.valid_password) {
-            loginFormState.setValue(new LoginFormState(null, passwordMessage));
+            loginFormState.setValue(new LoginFormState(null, null, passwordMessage, null));
+        } else if (confirmMessage != R.string.valid_confirm_password) {
+            loginFormState.setValue(new LoginFormState(null, null, null, confirmMessage));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
     }
 
-    //Testing registration password checking
-    public void registrationDataChanged(String name, String email, char[] password, char[] passwordConfirm) {
-        int passwordMessage = isPasswordValid(password);
-        int confirmMessage = isPasswordConfirmed(password, passwordConfirm);
-
-        if (!isEmailNameValid(email)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        }
-        else if (passwordMessage != R.string.valid_password) {
-            loginFormState.setValue(new LoginFormState(null, passwordMessage));
-        } else if (confirmMessage != R.string.valid_password) {
-            loginFormState.setValue(new LoginFormState(null, confirmMessage));
-        }
+    private boolean isNameValid(String name) {
+        return name != null;
     }
 
-    // A placeholder username validation check
+    // TODO does this need changing? A placeholder username validation check
     private boolean isEmailNameValid(String username) {
         if (username == null) {
             return false;
         }
+
         if (username.contains("@")) {
             return Patterns.EMAIL_ADDRESS.matcher(username).matches();
         } else {
@@ -80,7 +102,7 @@ public class LoginViewModel extends ViewModel {
     private int isPasswordConfirmed(char[] password, char[] confirmPassword) {
         if (!passwordMatches(password, confirmPassword)) return R.string.invalid_password_confirm;
 
-        return R.string.valid_password;
+        return R.string.valid_confirm_password;
     }
 
     private boolean passwordHasNumber(char[] password){
@@ -105,7 +127,9 @@ public class LoginViewModel extends ViewModel {
         String p1 = PasswordUtilities.charArrayToString(password);
         String p2 = PasswordUtilities.charArrayToString(confirmPassword);
 
-        if (p1.equals(p2)) return true;
+        if (p1.matches(p2)) {
+            return true;
+        }
 
         return false;
     }

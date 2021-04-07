@@ -1,27 +1,49 @@
 package com.example.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.Video;
 import com.example.myapplication.R;
+import com.example.pages.MainActivity;
 import com.example.tools.VideoViewAdapter;
+import com.example.tools.VideoViewListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class VideoFragment extends Fragment {
+public class VideoFragment extends Fragment implements VideoViewListener {
     private RecyclerView vView;
-    private RecyclerView.Adapter vAdapter;
+    private VideoViewAdapter vAdapter;
     private RecyclerView.LayoutManager vManager;
+    private Spinner spCategories;
+    private SearchView searchview;
+    private List<Video> videos;
+    private List<String> categories;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final String videoCategoryId = "categoriesDoc";
 
     public VideoFragment() { }
 
@@ -31,8 +53,12 @@ public class VideoFragment extends Fragment {
 
         vView = (RecyclerView) view.findViewById(R.id.recycler_video);
 
+        searchview = view.findViewById(R.id.searchview);
+
         vManager = new GridLayoutManager(getActivity(), 2);
         vView.setLayoutManager(vManager);
+
+        spCategories = view.findViewById(R.id.spCategories);
 
         List<String> dataset = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
@@ -40,13 +66,184 @@ public class VideoFragment extends Fragment {
         }
 
         //vAdapter = new VideoViewAdapter(dataset);
-        vView.setAdapter(vAdapter);
+        //vView.setAdapter(vAdapter);
+
+        loadCategories();
+
+        loadVideos();
 
         Button vFilter = (Button) view.findViewById(R.id.video_filter);
         vFilter.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "Not yet implemented", Toast.LENGTH_SHORT).show();
+            if (searchview.getQuery().toString().isEmpty()){
+                Toast.makeText(getActivity(), "Search text cant be empty", Toast.LENGTH_SHORT).show();
+            }else{
+                filterVideos(searchview.getQuery().toString().trim());
+            }
         });
 
         return view;
+    }
+
+    private void loadCategories() {
+
+//        categories = new ArrayList<>();
+//        categories.add("--Select Category--");
+//        categories.add("Yoga");
+//        categories.add("Fitness");
+//        categories.add("Inner workout");
+//        categories.add("Skills");
+//        categories.add("Collective conversation");
+//
+//        ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, categories);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spCategories.setAdapter(dataAdapter);
+//        spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                if (position!=0){
+//                    filterVideosByCategories(categories.get(position));
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
+        db.collection("VideoCategories").document(videoCategoryId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.get("category")!=null) {
+                    categories = new ArrayList<>();
+                    categories.add("--Select Category--");
+
+                    List<String> list = (List<String>) documentSnapshot.get("category");
+                    categories.addAll(list);
+                    ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, categories);
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spCategories.setAdapter(dataAdapter);
+
+                    spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                            if (position != 0) {
+                                filterVideosByCategories(categories.get(position));
+                            } else {
+                                filterVideosByCategories("");
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+                }
+            }
+        });
+//        db.collection("categories").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                DocumentSnapshot ds = queryDocumentSnapshots.getDocuments().get(0);
+//                if (ds.get("category")!=null){
+//                    categories = new ArrayList<>();
+//                    categories.add("--Select Category--");
+//
+//                    List<String> list = (List<String>) ds.get("category");
+//                    categories.addAll(list);
+//                    ArrayAdapter dataAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, categories);
+//                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    spCategories.setAdapter(dataAdapter);
+//
+//                    spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                        @Override
+//                        public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+//                            if (position!=0){
+//                                filterVideosByCategories(categories.get(position));
+//                            }else{
+//                                filterVideosByCategories("");
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//                        }
+//                    });
+//                }
+//            }
+//        });
+
+    }
+
+    private void filterVideosByCategories(String s) {
+        List<Video> tempFavs = new ArrayList();
+        for(Video v: videos){
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if(v.getCategory().toLowerCase().contains(s.toLowerCase())){
+                tempFavs.add(v);
+            }
+        }
+
+        if (tempFavs.isEmpty()){
+            Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
+        }else {
+            //update recyclerview
+            vAdapter.setVideos(tempFavs);
+        }
+    }
+
+    private void filterVideos(String s) {
+        List<Video> tempFavs = new ArrayList();
+        for(Video v: videos){
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if(v.getTitle().toLowerCase().contains(s.toLowerCase())){
+                tempFavs.add(v);
+            }
+        }
+
+        if (tempFavs.isEmpty()){
+            Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
+        }else {
+            //update recyclerview
+            vAdapter.setVideos(tempFavs);
+        }
+    }
+
+    public void loadVideos() {
+
+        videos = new ArrayList<>();
+
+        db.collection("Video").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
+                    Video video = new Video();
+                    video.setId(ds.getId());
+                    video.setTitle((String) ds.get("title"));
+                    video.setVideoURL((String) ds.get("url"));
+                    video.setThumbnail((String) ds.get("thumbnail"));
+                    video.setCategory((String) ds.get("category"));
+                    videos.add(video);
+                }
+
+                loadVideosAdapter(videos);
+            }
+        });
+    }
+
+    private void loadVideosAdapter(List<Video> videos) {
+        vAdapter = new VideoViewAdapter(getContext(),videos);
+        vAdapter.videoViewListener = this;
+
+        vView.setAdapter(vAdapter);
+    }
+
+    @Override
+    public void onVideoClick(Video video) {
+        WatchVideoFragment fragment = WatchVideoFragment.newInstance(video);
+        ((MainActivity)getActivity()).loadFragment(fragment);
     }
 }

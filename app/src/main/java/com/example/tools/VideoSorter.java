@@ -11,15 +11,6 @@ import java.util.List;
 public class VideoSorter {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public List<Video> sortById(List<Video> vids){
-        vids.sort((Video v1, Video v2) ->{
-            return v1.getId() - v2.getId();
-        });
-
-        return vids;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public List<Video> sortByDifficultyThenAlphabetically(List<Video> vids){
 
         vids.sort((Video v1, Video v2) ->{

@@ -23,10 +23,17 @@ import com.example.pages.ui.login.LoginViewModelFactory;
 import com.example.tools.PasswordUtilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,10 +53,14 @@ public class RegistrationActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
         mAuth = FirebaseAuth.getInstance();
 
-        final EditText nameEditText = findViewById(R.id.name_registration);
-        final EditText emailEditText = findViewById(R.id.email_registration);
-        final EditText passwordEditText = findViewById(R.id.password_registration);
-        final EditText passwordConfirmEditText = findViewById(R.id.confirm_password_registration);
+        final TextInputLayout nameLayout = findViewById(R.id.layout_name_r);
+        final TextInputLayout emailLayout = findViewById(R.id.layout_email_r);
+        final TextInputLayout passwordLayout = findViewById(R.id.layout_password_r);
+        final TextInputLayout passwordConfirmLayout = findViewById(R.id.layout_confirm_r);
+        final TextInputEditText nameEditText = findViewById(R.id.name_registration);
+        final TextInputEditText emailEditText = findViewById(R.id.email_registration);
+        final TextInputEditText passwordEditText = findViewById(R.id.password_registration);
+        final TextInputEditText passwordConfirmEditText = findViewById(R.id.confirm_password_registration);
         final Button createAccountButton = findViewById(R.id.create_account);
         final TextView loginText = findViewById(R.id.login_registration);
 
@@ -57,25 +68,26 @@ public class RegistrationActivity extends AppCompatActivity {
             if (loginFormState == null) {
                 return;
             }
-            //createAccountButton.setEnabled(loginFormState.isDataValid());
+            createAccountButton.setEnabled(loginFormState.isDataValid());
+            if (loginFormState.getNameError() != null) {
+                nameLayout.setError(getString(loginFormState.getNameError()));
+            } else {
+                nameLayout.setError(null);
+            }
             if (loginFormState.getEmailError() != null) {
-                emailEditText.setError(getString(loginFormState.getEmailError()));
+                emailLayout.setError(getString(loginFormState.getEmailError()));
+            } else {
+                emailLayout.setError(null);
             }
             if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                passwordLayout.setError(getString(loginFormState.getPasswordError()));
+            } else {
+                passwordLayout.setError(null);
             }
-            if (loginFormState.getPasswordError() != null) {
-                passwordConfirmEditText.setError(getString(loginFormState.getPasswordError()));
-            }
-        });
-
-        // TODO fix this method MAY NOT BE NEEDED
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
-            if (loginResult == null) {
-                return;
-            }
-            if (loginResult.getError() != null) {
-
+            if (loginFormState.getPasswordConfirmError() != null) {
+                passwordConfirmLayout.setError(getString(loginFormState.getPasswordConfirmError()));
+            } else {
+                passwordConfirmLayout.setError(null);
             }
         });
 
@@ -104,10 +116,19 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
                     redirectUser();
-                } else {
-                    //TODO error message Matt
-                    //TODO display error to user if possible from firebase
-                    //https://stackoverflow.com/questions/37859582/how-to-catch-a-firebase-auth-specific-exceptions
+                } else if (!task.isSuccessful()) {
+                    //Referenced https://stackoverflow.com/questions/37859582/how-to-catch-a-firebase-auth-specific-exceptions
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        emailLayout.setError(getString(R.string.invalid_email));
+                        emailLayout.requestFocus();
+                    } catch (FirebaseAuthUserCollisionException e) {
+                        emailLayout.setError(getString(R.string.existing_email));
+                        emailLayout.requestFocus();
+                    } catch (Exception e) {
+                        Log.e("EXCEPTION: ", e.getMessage());
+                    }
                 }
             });
         });
@@ -132,12 +153,12 @@ public class RegistrationActivity extends AppCompatActivity {
         emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordConfirmEditText.addTextChangedListener(afterTextChangedListener);
-        passwordConfirmEditText.setOnEditorActionListener((v, actionId, event) -> {
-            //if (actionId == EditorInfo.IME_ACTION_DONE) {
-                //loginViewModel.register(name, email, pass)
-            //}
-            return false;
-        });
+//        passwordConfirmEditText.setOnEditorActionListener((v, actionId, event) -> {
+//            //if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                //loginViewModel.register(name, email, pass)
+//            //}
+//            return false;
+//        });
 
         loginText.setOnClickListener(v -> {
             startActivity(new Intent(this, LoginActivity.class));
