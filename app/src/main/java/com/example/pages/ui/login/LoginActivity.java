@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.model.LoggedInUser;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.tools.PasswordUtilities;
@@ -46,6 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -54,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private FirebaseAuth mAuth;
     private final FirebaseFirestore FIRESTORE = FirebaseFirestore.getInstance();
+    private byte[] salt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,14 +147,41 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordEditText.getText().toString();
             Log.d("passwd", password);
 
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
-                if (task.isSuccessful()) {
-                    startActivity(new Intent(this, MainActivity.class));
-                } else {
-                    Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
-                    loadingProgressBar.setVisibility(View.INVISIBLE);
-                }
-            });
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("salts")
+                    .document(email)
+                    .get()
+                    .addOnCompleteListener(task ->{
+                        if(task.isSuccessful()){
+                            //salt = result;
+                            DocumentSnapshot saltSnapshot = task.getResult();
+
+
+                            if(saltSnapshot != null && saltSnapshot.exists()){
+                                salt = PasswordUtilities.stringToByteArray((String) Objects.requireNonNull(saltSnapshot.get("salt")));
+
+                                String hashedPassword = PasswordUtilities.byteArrayToString(PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordEditText), salt));
+
+                                mAuth.signInWithEmailAndPassword(email, hashedPassword).addOnCompleteListener(this, loginTask -> {
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(this, MainActivity.class));
+                                    } else {
+                                        Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                        loadingProgressBar.setVisibility(View.INVISIBLE);
+                                    }
+                                });
+                            }
+                            else{
+                                //redirect login failed
+                                Log.d("LoginError", "Salt not exists");
+                            }
+                        }
+                    }).addOnFailureListener(e->{
+                //redirect login failed
+                Log.d("LoginError", "Get salt from firebase failed");
+                    });
+
+
         });
 
         registerText.setOnClickListener(v -> {

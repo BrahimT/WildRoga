@@ -73,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if(mAuth == null){
+            mAuth = FirebaseAuth.getInstance();
+        }
+
         FirebaseUser cUser = mAuth.getCurrentUser();
         if (cUser != null) {
             loadFragment(new HomeFragment());
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_container, fragment)
                 .addToBackStack(null)
