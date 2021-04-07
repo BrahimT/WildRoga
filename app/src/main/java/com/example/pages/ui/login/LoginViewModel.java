@@ -28,18 +28,18 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void loginDataChanged(String email, char[] password) {
-    public void login(String username, char[] password) {
-        // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
-    }
+//    public void loginDataChanged(String email, char[] password) {
+//    public void login(String username, char[] password) {
+//        // can be launched in a separate asynchronous job
+//        Result<LoggedInUser> result = loginRepository.login(username, password);
+//
+//        if (result instanceof Result.Success) {
+//            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+//            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+//        } else {
+//            loginResult.setValue(new LoginResult(R.string.login_failed));
+//        }
+//    }
 
 //    TODO Can probably be removed - Matt
 //    public void loginDataChanged(String email, char[] password) {
