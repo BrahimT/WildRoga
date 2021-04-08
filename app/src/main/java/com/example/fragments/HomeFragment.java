@@ -38,6 +38,7 @@ import com.potyvideo.library.AndExoPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class HomeFragment extends Fragment implements VideoViewListener {
     private RecyclerView hView;
@@ -50,6 +51,7 @@ public class HomeFragment extends Fragment implements VideoViewListener {
 
     private FirebaseAuth mAuth;
     private LoggedInUser user;
+    private String documentId;
 
     public HomeFragment() { }
 
@@ -76,14 +78,17 @@ public class HomeFragment extends Fragment implements VideoViewListener {
                     .addOnCompleteListener(task ->{
                         if(task.isSuccessful()){
                             List<LoggedInUser> users = task.getResult().toObjects(LoggedInUser.class);
+
                             if(users.size() == 1){
                                 user = users.get(0);
+                                documentId = task.getResult().getDocuments().get(0).getId();
                                 Log.d("user", user.getDisplayName());
                             }
 
                         }
                     });
         }
+
 
         v = new Video();
 
@@ -115,7 +120,19 @@ public class HomeFragment extends Fragment implements VideoViewListener {
         Button b = (Button) getView();
 
         b.setOnClickListener( (a) ->{
-            user.addVideoToFavourites(video);
+
+            user.addVideoToFavorites(video);
+
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("users").document(documentId).update("favorites", user.getFavorites())
+                    .addOnSuccessListener(task ->{
+                        //TODO alert user of success
+
+                    })
+                    .addOnFailureListener(getActivity(), storeTask ->{
+                // TODO alert user of failure, ask them to try again
+                        user.removeFromFavorites(video);
+            });
         });
 
         return b;

@@ -15,7 +15,7 @@ public class LoggedInUser implements Serializable {
     private String userId;
     private String displayName;
     private String email;
-    private List<Video> favourites;
+    private List<Video> favorites;
 
     //Required no-arg constructor
     public LoggedInUser(){
@@ -39,7 +39,9 @@ public class LoggedInUser implements Serializable {
         return this.email;
     }
 
-    public List<Video> getFavourites(){ return favourites; }
+    public List<Video> getFavorites(){ return favorites; }
 
-    public void addVideoToFavourites(Video video){ favourites.add(video); }
+    public void addVideoToFavorites(Video video){ favorites.add(video); }
+
+    public void removeFromFavorites(Video video){ favorites.remove(video);}
 }
