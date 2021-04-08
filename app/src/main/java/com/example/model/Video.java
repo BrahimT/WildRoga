@@ -11,6 +11,7 @@ import com.google.gson.internal.bind.ArrayTypeAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Video implements Serializable {
@@ -20,6 +21,7 @@ public class Video implements Serializable {
     private String thumbnail;
     private String videoURL;
     private String category;
+    private Date dateUploaded;
 
     List<Video> videoList = new ArrayList<>();
 
@@ -91,5 +93,11 @@ public class Video implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Date getDateUploaded() {return this.dateUploaded;};
+
+    public void setDateUploaded(Date date){
+        this.dateUploaded = date;
     }
 }
