@@ -1,7 +1,5 @@
 package com.example.test;
 
-import android.widget.EditText;
-
 import com.example.tools.PasswordUtilities;
 
 import org.junit.Test;

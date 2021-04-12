@@ -11,6 +11,7 @@ import com.google.gson.internal.bind.ArrayTypeAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,12 +28,18 @@ public class Video implements Serializable {
 
     public Video() { }
 
-    public Video(String id,String videoURL ,VideoDifficulty difficulty, String title, String thumbnail) {
+    public Video(String id, String videoURL, VideoDifficulty difficulty, String title, String thumbnail) {
+        this(id, videoURL, difficulty, title, thumbnail, "None", Calendar.getInstance().getTime());
+    }
+
+    public Video(String id, String videoURL, VideoDifficulty difficulty, String title, String thumbnail, String category, Date uploaded){
         this.id = id;
         this.videoURL = videoURL;
         this.difficulty = difficulty;
         this.title = title;
         this.thumbnail = thumbnail;
+        this.category = category;
+        this.dateUploaded = uploaded;
     }
 
     public String getId(){
@@ -99,5 +106,16 @@ public class Video implements Serializable {
 
     public void setDateUploaded(Date date){
         this.dateUploaded = date;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Video)){
+            return false;
+        }
+
+        Video video = (Video) obj;
+
+        return video.getId().equals(this.getId());
     }
 }

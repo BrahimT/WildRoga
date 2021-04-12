@@ -109,7 +109,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
                     //TODO error message Matt
                     //Add user data to firestore, rollback auth user on failure
-                    FIRESTORE.collection("users").add(user).addOnFailureListener( this, storeTask ->{
+                    FIRESTORE.collection("users").add(user)
+                            .addOnFailureListener( this, storeTask ->{
                         mAuth.getCurrentUser().delete();
                     });
 

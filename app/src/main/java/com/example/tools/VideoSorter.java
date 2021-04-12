@@ -10,10 +10,15 @@ import java.util.List;
 
 public class VideoSorter {
 
-    public List<Video> sortByDate(List<Video> vids){
+    public List<Video> sortById(List<Video> vids){
         vids.sort((Video v1, Video v2) ->{
-            return compareByDate(v1, v2);
+            return compareAlphabetically(v1.getId(), v2.getId());
         });
+
+        return vids;
+    }
+    public List<Video> sortByDate(List<Video> vids){
+        vids.sort(this::compareByDate);
 
         return vids;
     }
@@ -45,7 +50,11 @@ public class VideoSorter {
 
         int shorterLength = -1;
 
-        if(s1Shorter) shorterLength = s1.length();
+        if(s1Shorter){
+            shorterLength = s1.length();
+        }else{
+            shorterLength = s2.length();
+        }
 
         for(int i = 0; i < shorterLength; i++){
             if(s1.charAt(i) != s2.charAt(i)) return s1.charAt(i) - s2.charAt(i);

@@ -1,5 +1,6 @@
 package com.example.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,13 +20,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
+import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,11 +50,44 @@ public class VideoFragment extends Fragment implements VideoViewListener {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final String videoCategoryId = "categoriesDoc";
 
+    private FirebaseAuth mAuth;
+    private LoggedInUser user;
+    private String documentId;
+
     public VideoFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_video, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser fbUser = mAuth.getCurrentUser();
+
+        //Redirect to login if user not in Firebase Auth
+        if(fbUser == null){
+            this.startActivity(new Intent(getActivity(), LoginActivity.class));
+        }else{
+
+            //TODO add error handling if user in Auth but not Firestore - Max
+
+            //Get associated user data from Firestore
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            firestore.collection("users")
+                    .whereEqualTo("userId", fbUser.getUid())
+                    .get()
+                    .addOnCompleteListener(task ->{
+                        if(task.isSuccessful()){
+                            List<LoggedInUser> users = task.getResult().toObjects(LoggedInUser.class);
+
+                            if(users.size() == 1){
+                                user = users.get(0);
+                                user.setDocumentId(task.getResult().getDocuments().get(0).getId());
+                                Log.d("vidUser", user.getDisplayName());
+                            }
+
+                        }
+                    });
+        }
 
         vView = (RecyclerView) view.findViewById(R.id.recycler_video);
 
@@ -243,7 +281,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
     @Override
     public void onVideoClick(Video video) {
-        WatchVideoFragment fragment = WatchVideoFragment.newInstance(video);
+        WatchVideoFragment fragment = WatchVideoFragment.newInstance(video, user);
         ((MainActivity)getActivity()).loadFragment(fragment);
     }
 }

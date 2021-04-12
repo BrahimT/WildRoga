@@ -1,8 +1,10 @@
 package com.example.fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.db.VideoDB;
+import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
+import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,13 +49,19 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
     private VideoDB videoDB;
     private Video currentVideo;
 
-    public WatchVideoFragment() { }
+    private LoggedInUser user;
 
-    public static WatchVideoFragment newInstance(Video video) {
+
+    public WatchVideoFragment() {
+
+    }
+
+    public static WatchVideoFragment newInstance(Video video, LoggedInUser user) {
         WatchVideoFragment myFragment = new WatchVideoFragment();
 
         Bundle args = new Bundle();
         args.putSerializable("video", video);
+        args.putSerializable("user", user);
         myFragment.setArguments(args);
 
         return myFragment;
@@ -80,6 +92,7 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments()!=null){
             currentVideo = (Video) getArguments().getSerializable("video");
+            user = (LoggedInUser) getArguments().getSerializable("user");
             videoPlayerView.setSource(currentVideo.getVideoURL());
             videoTitle.setText(currentVideo.getTitle());
             setupFavorites(currentVideo);
@@ -132,33 +145,65 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
     }
 
     private void setupFavorites(Video video) {
-        if (videoDB.exists(video.getId())){
+
+        if (user.getFavorites().contains(video)){
             addToFavorites.setText("Unsave");
-            addToFavorites.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (videoDB.delete(video.getId())){
-                        Toast.makeText(getActivity(), "Deleted from Favorites", Toast.LENGTH_SHORT).show();
-                        setupFavorites(video);
-                    } else{
-                        Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            addToFavorites.setOnClickListener((a)-> {
+                user.removeFromFavorites(video);
+
+                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                firestore.collection("users").document(user.getUserId()).update("favorites", user.getFavorites())
+                        .addOnSuccessListener(task ->{
+                            //TODO alert user of success
+
+                        })
+                        .addOnFailureListener(getActivity(), storeTask ->{
+                            // TODO alert user of failure, ask them to try again
+                            user.removeFromFavorites(video);
+                        });
+
+//                    new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (videoDB.delete(video.getId())){
+//                        Toast.makeText(getActivity(), "Deleted from Favorites", Toast.LENGTH_SHORT).show();
+//                        setupFavorites(video);
+//                    } else{
+//                        Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
             });
         } else{
             addToFavorites.setText("Save");
-            addToFavorites.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!videoDB.exists(video.getId())){
-                        videoDB.insertData(video.getId(),video.getTitle(),video.getVideoURL(),video.getThumbnail());
-                        setupFavorites(video);
-                        Toast.makeText(getActivity(), "Added to Favorites", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getActivity(), "Already in Favorites", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            addToFavorites.setOnClickListener( (a) ->{
+
+
+                user.addVideoToFavorites(video);
+
+                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+                firestore.collection("users").document(user.getDocumentId()).update("favorites", user.getFavorites())
+                        .addOnSuccessListener(task ->{
+                            //TODO alert user of success
+                            setupFavorites(video);
+                        })
+                        .addOnFailureListener(getActivity(), storeTask ->{
+                            // TODO alert user of failure, ask them to try again
+                            user.removeFromFavorites(video);
+                        });
+
+
+                //                @Override
+//                public void onClick(View view) {
+//                    if (!videoDB.exists(video.getId())){
+//                        videoDB.insertData(video.getId(),video.getTitle(),video.getVideoURL(),video.getThumbnail());
+//                        setupFavorites(video);
+//                        Toast.makeText(getActivity(), "Added to Favorites", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        Toast.makeText(getActivity(), "Already in Favorites", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
             });
+
         }
     }
 }

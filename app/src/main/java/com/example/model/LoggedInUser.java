@@ -3,6 +3,7 @@ package com.example.model;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,7 @@ public class LoggedInUser implements Serializable {
     private String displayName;
     private String email;
     private List<Video> favorites;
+    private String documentId;
 
     //Required no-arg constructor
     public LoggedInUser(){
@@ -25,11 +27,17 @@ public class LoggedInUser implements Serializable {
         this.userId = user.getUid();
         this.displayName = name;
         this.email = user.getEmail();
+        this.favorites = new ArrayList<>();
     }
 
     public String getUserId() {
         return userId;
     }
+    public void setDocumentId(String id){
+        this.documentId = id;
+    }
+
+    public String getDocumentId(){ return documentId;}
 
     public String getDisplayName() {
         return displayName;

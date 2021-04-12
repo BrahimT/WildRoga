@@ -1,14 +1,11 @@
 package com.example.fragments;
 
-import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -27,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
-import com.example.pages.ViewerActivity;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
@@ -38,7 +34,6 @@ import com.potyvideo.library.AndExoPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 public class HomeFragment extends Fragment implements VideoViewListener {
     private RecyclerView hView;
@@ -51,7 +46,7 @@ public class HomeFragment extends Fragment implements VideoViewListener {
 
     private FirebaseAuth mAuth;
     private LoggedInUser user;
-    private String documentId;
+    private String userDocumentId;
 
     public HomeFragment() { }
 
@@ -81,7 +76,7 @@ public class HomeFragment extends Fragment implements VideoViewListener {
 
                             if(users.size() == 1){
                                 user = users.get(0);
-                                documentId = task.getResult().getDocuments().get(0).getId();
+                                user.setDocumentId(task.getResult().getDocuments().get(0).getId());
                                 Log.d("user", user.getDisplayName());
                             }
 
@@ -119,21 +114,7 @@ public class HomeFragment extends Fragment implements VideoViewListener {
         //Todo get real find button
         Button b = (Button) getView();
 
-        b.setOnClickListener( (a) ->{
 
-            user.addVideoToFavorites(video);
-
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-            firestore.collection("users").document(documentId).update("favorites", user.getFavorites())
-                    .addOnSuccessListener(task ->{
-                        //TODO alert user of success
-
-                    })
-                    .addOnFailureListener(getActivity(), storeTask ->{
-                // TODO alert user of failure, ask them to try again
-                        user.removeFromFavorites(video);
-            });
-        });
 
         return b;
     }
