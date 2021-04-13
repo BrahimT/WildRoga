@@ -5,27 +5,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-
-    <com.potyvideo.library.AndExoPlayerView
-        android:id="@+id/videoPlayerView"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        app:andexo_aspect_ratio="aspect_16_9"
-        app:andexo_full_screen="true"
-        app:andexo_play_when_ready="true"
-        app:andexo_show_controller="true"
-        app:andexo_resize_mode="Fit" />
-
     <TextView
-        android:id="@+id/videoTitle"
+        android:id="@+id/welcome_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/whatsnew"
+        android:text="@string/welcome_user"
         android:textSize="30sp"
+        android:paddingTop="5dp"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
         android:paddingEnd="5dp"
-        android:paddingRight="5dp"/>
+        android:paddingRight="5dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_home"

@@ -15,9 +15,8 @@ public class splashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         final WebView v= findViewById(R.id.webview);
-        //TODO error here as well, java.lang.NullPointerException: Attempt to invoke virtual method 'android.webkit.WebSettings android.webkit.WebView.getSettings()' on a null object reference
-        //v.getSettings().setJavaScriptEnabled(true);
-        //v.loadUrl("file:///android_asset/hello.html");
+        v.getSettings().setJavaScriptEnabled(true);
+        v.loadUrl("file:///android_asset/hello.html");
         handler=new Handler();
         handler.postDelayed(new Runnable() {
 

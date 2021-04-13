@@ -76,7 +76,7 @@ public class LoginViewModel extends ViewModel {
         return name != null;
     }
 
-    // TODO does this need changing? A placeholder username validation check
+    // TODO does this need changing? A placeholder email validation check
     private boolean isEmailNameValid(String username) {
         if (username == null) {
             return false;

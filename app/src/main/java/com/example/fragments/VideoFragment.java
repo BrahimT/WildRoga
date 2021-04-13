@@ -98,14 +98,6 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
         spCategories = view.findViewById(R.id.spCategories);
 
-        List<String> dataset = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            dataset.add("Thumbnail " + i);
-        }
-
-        //vAdapter = new VideoViewAdapter(dataset);
-        //vView.setAdapter(vAdapter);
-
         loadCategories();
 
         loadVideos();
