@@ -13,11 +13,8 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.model.LoggedInUser;
@@ -25,9 +22,9 @@ import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
+import com.example.tools.VideoSorter;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +34,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class VideoFragment extends Fragment implements VideoViewListener {
     private RecyclerView vView;
@@ -110,12 +106,43 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
         loadVideos();
 
-        Button vFilter = (Button) view.findViewById(R.id.video_search);
-        vFilter.setOnClickListener(v -> {
+        VideoSorter videoSorter = new VideoSorter();
+
+        Spinner sortingSpinner = (Spinner) view.findViewById(R.id.video_sort);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sorting_choices, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortingSpinner.setAdapter(adapter);
+
+        sortingSpinner.setOnItemClickListener( (parent, v, pos, id)->{
+
+            String selectedSort = (String) parent.getItemAtPosition(pos);
+
+            switch(selectedSort){
+                case "Title":
+                    videos = videoSorter.sortAlphabetically(videos);
+                    break;
+                case "Difficulty":
+                    videos = videoSorter.sortByDifficultyThenAlphabetically(videos);
+                    break;
+                case "Date":
+                    videos = videoSorter.sortByDate(videos);
+                    break;
+            }
+
+            loadVideosAdapter(videos);
+
+
+
+        });
+
+        Button vSearch = (Button) view.findViewById(R.id.video_search);
+        vSearch.setOnClickListener(v -> {
             if (searchview.getQuery().toString().isEmpty()){
                 Toast.makeText(getActivity(), "Search text cant be empty", Toast.LENGTH_SHORT).show();
             }else{
-                filterVideos(searchview.getQuery().toString().trim());
+                searchVideos(searchview.getQuery().toString().trim());
             }
         });
 
@@ -224,6 +251,8 @@ public class VideoFragment extends Fragment implements VideoViewListener {
             }
         }
 
+
+
         if (tempFavs.isEmpty()){
             Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
         }else {
@@ -232,7 +261,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
         }
     }
 
-    private void filterVideos(String s) {
+    private void searchVideos(String s) {
         List<Video> tempFavs = new ArrayList();
         for(Video v: videos){
             //or use .equal(text) with you want equal match

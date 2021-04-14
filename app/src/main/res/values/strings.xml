@@ -60,4 +60,10 @@
     <string name="filter">Filter</string>
     <string name="filter_by_category">Filter by Category:</string>
 
+    <string-array name="sorting_choices">
+        <item>Title</item>
+        <item>Date</item>
+        <item>Difficulty</item>
+    </string-array>
+
 </resources>
