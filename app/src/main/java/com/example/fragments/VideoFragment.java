@@ -110,7 +110,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
         loadVideos();
 
-        Button vFilter = (Button) view.findViewById(R.id.video_filter);
+        Button vFilter = (Button) view.findViewById(R.id.video_search);
         vFilter.setOnClickListener(v -> {
             if (searchview.getQuery().toString().isEmpty()){
                 Toast.makeText(getActivity(), "Search text cant be empty", Toast.LENGTH_SHORT).show();
