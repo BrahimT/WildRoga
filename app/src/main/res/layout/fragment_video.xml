@@ -7,6 +7,7 @@
     android:padding="5dp">
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/filter_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,12 +31,14 @@
 
     <TextView
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Filter by Category:"/>
 
     <Spinner
         android:id="@+id/spCategories"
+        android:visibility="gone"
         tools:listitem="@layout/support_simple_spinner_dropdown_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

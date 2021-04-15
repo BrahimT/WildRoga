@@ -20,11 +20,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.model.Category;
 import com.example.model.LoggedInUser;
 import com.example.model.Video;
 import com.example.myapplication.R;
 import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
+import com.example.tools.CategoryAdapter;
+import com.example.tools.CategoryListener;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class VideoFragment extends Fragment implements VideoViewListener {
+public class VideoFragment extends Fragment implements VideoViewListener, CategoryListener {
     private RecyclerView vView;
     private VideoViewAdapter vAdapter;
     private RecyclerView.LayoutManager vManager;
@@ -53,6 +56,8 @@ public class VideoFragment extends Fragment implements VideoViewListener {
     private FirebaseAuth mAuth;
     private LoggedInUser user;
     private String documentId;
+
+    private CategoryAdapter categoryAdapter;
 
     public VideoFragment() { }
 
@@ -100,9 +105,10 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
         loadCategories();
 
-        loadVideos();
+      //  loadVideos();
 
         Button vFilter = (Button) view.findViewById(R.id.video_filter);
+        vFilter.setVisibility(View.GONE);
         vFilter.setOnClickListener(v -> {
             if (searchview.getQuery().toString().isEmpty()){
                 Toast.makeText(getActivity(), "Search text cant be empty", Toast.LENGTH_SHORT).show();
@@ -143,7 +149,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
         db.collection("VideoCategories").document(videoCategoryId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.get("category")!=null) {
+               /* if (documentSnapshot.get("category")!=null) {
                     categories = new ArrayList<>();
                     categories.add("--Select Category--");
 
@@ -168,7 +174,23 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
                         }
                     });
+                }*/
+                List<Category> categories = new ArrayList<>();
+
+                if (documentSnapshot.get("categories")!=null){
+                    Map<String,Object> map = (Map<String, Object>) documentSnapshot.get("categories");
+
+                   for(Map.Entry<String,Object> entry : map.entrySet()){
+                       Category category = new Category(entry.getKey(), (String) entry.getValue());
+                       categories.add(category);
+                   }
                 }
+
+                categoryAdapter = new CategoryAdapter(getContext(),categories);
+                categoryAdapter.categoryListener = VideoFragment.this;
+                vView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                vView.setAdapter(categoryAdapter);
             }
         });
 //        db.collection("categories").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -274,6 +296,12 @@ public class VideoFragment extends Fragment implements VideoViewListener {
     @Override
     public void onVideoClick(Video video) {
         WatchVideoFragment fragment = WatchVideoFragment.newInstance(video, user);
+        ((MainActivity)getActivity()).loadFragment(fragment);
+    }
+
+    @Override
+    public void onCategoryClick(Category category) {
+        WatchVideoFragment fragment = WatchVideoFragment.newInstance(category.getCategory(),user);
         ((MainActivity)getActivity()).loadFragment(fragment);
     }
 }
