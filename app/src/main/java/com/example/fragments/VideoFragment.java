@@ -26,6 +26,7 @@ import com.example.tools.VideoSorter;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class VideoFragment extends Fragment implements VideoViewListener {
@@ -50,6 +52,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
     private LoggedInUser user;
     private String documentId;
 
+    String[] sortingTypes = {"Title", "Difficulty", "Date"};
     public VideoFragment() { }
 
     @Override
@@ -115,26 +118,30 @@ public class VideoFragment extends Fragment implements VideoViewListener {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortingSpinner.setAdapter(adapter);
 
-        sortingSpinner.setOnItemClickListener( (parent, v, pos, id)->{
+        sortingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSort = (String) parent.getItemAtPosition(position);
 
-            String selectedSort = (String) parent.getItemAtPosition(pos);
+                switch(selectedSort){
+                    case "Title":
+                        videos = videoSorter.sortAlphabetically(videos);
+                        break;
+                    case "Difficulty":
+                        videos = videoSorter.sortByDifficultyThenAlphabetically(videos);
+                        break;
+                    case "Date":
+                        videos = videoSorter.sortByDate(videos);
+                        break;
+                }
 
-            switch(selectedSort){
-                case "Title":
-                    videos = videoSorter.sortAlphabetically(videos);
-                    break;
-                case "Difficulty":
-                    videos = videoSorter.sortByDifficultyThenAlphabetically(videos);
-                    break;
-                case "Date":
-                    videos = videoSorter.sortByDate(videos);
-                    break;
+                loadVideosAdapter(videos);
             }
 
-            loadVideosAdapter(videos);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-
-
+            }
         });
 
         Button vSearch = (Button) view.findViewById(R.id.video_search);
@@ -293,6 +300,13 @@ public class VideoFragment extends Fragment implements VideoViewListener {
                     video.setVideoURL((String) ds.get("url"));
                     video.setThumbnail((String) ds.get("thumbnail"));
                     video.setCategory((String) ds.get("category"));
+
+                    Long difficultyLong = (Long) ds.get("difficulty");
+                    video.setDifficulty(difficultyLong.intValue());
+
+                    Timestamp timestamp = (Timestamp) ds.get("dateUploaded");
+                    video.setDateUploaded(timestamp.toDate());
+
                     videos.add(video);
                 }
 
