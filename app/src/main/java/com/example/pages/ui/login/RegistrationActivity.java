@@ -107,14 +107,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     LoggedInUser user = new LoggedInUser(Objects.requireNonNull(mAuth.getCurrentUser()), name);
 
-                    //TODO error message Matt
                     //Add user data to firestore, rollback auth user on failure
                     FIRESTORE.collection("users").add(user)
                             .addOnFailureListener( this, storeTask ->{
                         mAuth.getCurrentUser().delete();
                     });
-
-
 
                     redirectUser();
                 } else if (!task.isSuccessful()) {

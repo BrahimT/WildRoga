@@ -39,6 +39,7 @@
     <string name="invalid_password_confirm">Password entries must match</string>
     <string name="invalid_email">Please enter a valid email address</string>
     <string name="existing_email">The email address is already in use</string>
+    <string name="incorrect_password">Incorrect password</string>
 
     <!-- General Text -->
     <string name="text_registration_1">CREATE ACCOUNT</string>
