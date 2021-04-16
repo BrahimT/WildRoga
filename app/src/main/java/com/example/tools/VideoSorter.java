@@ -42,7 +42,7 @@ public class VideoSorter {
     }
 
     private int compareByDifficulty(Video v1, Video v2){
-        return v1.getDifficulty().getDifficultyLevel() - v2.getDifficulty().getDifficultyLevel();
+        return v1.getDifficulty() - v2.getDifficulty();
     }
 
     private int compareAlphabetically(String s1, String s2){

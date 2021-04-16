@@ -54,6 +54,8 @@ public class LoggedInUser implements Serializable {
 
     public List<Video> getFavorites(){ return favorites; }
 
+    public void setFavorites(List<Video> favorites){ this.favorites = favorites;}
+
     public void addVideoToFavorites(Video video){ favorites.add(video); }
 
     public void removeFromFavorites(Video video){ favorites.remove(video);}

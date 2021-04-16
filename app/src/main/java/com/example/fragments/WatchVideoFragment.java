@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,19 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
         return myFragment;
     }
 
+    public static WatchVideoFragment newInstance(String category, LoggedInUser user) {
+        WatchVideoFragment myFragment = new WatchVideoFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable("category", category);
+        args.putSerializable("user", user);
+        myFragment.setArguments(args);
+
+        return myFragment;
+    }
+
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_video, container, false);
@@ -93,9 +107,9 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
         if (getArguments()!=null){
             currentVideo = (Video) getArguments().getSerializable("video");
             user = (LoggedInUser) getArguments().getSerializable("user");
-            videoPlayerView.setSource(currentVideo.getVideoURL());
-            videoTitle.setText(currentVideo.getTitle());
-            setupFavorites(currentVideo);
+           // videoPlayerView.setSource(currentVideo.getVideoURL());
+            //videoTitle.setText(currentVideo.getTitle());
+            //setupFavorites(currentVideo);
         }
     }
 
@@ -103,7 +117,7 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
 
         videos = new ArrayList<>();
 
-        db.collection("Videos").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("Video").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
@@ -112,12 +126,54 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
                     video.setTitle((String) ds.get("title"));
                     video.setVideoURL((String) ds.get("url"));
                     video.setThumbnail((String) ds.get("thumbnail"));
+                    video.setCategory((String) ds.get("category"));
                     videos.add(video);
                 }
-
-                loadVideosAdapter(videos);
+                if (getArguments().containsKey("category")){
+                    loadCategoryVideo(videos);
+                }else {
+                    loadVideosAdapter(videos);
+                }
             }
         });
+    }
+
+    private void loadCategoryVideo(List<Video> videos) {
+        this.videos = videos;
+        List<Video> filteredVideos = filterVideosByCategories(getArguments().getString("category"));
+
+        if (filteredVideos.isEmpty()){
+            Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
+        }else {
+            hAdapter = new VideoViewAdapter(getContext(),filteredVideos);
+            hAdapter.videoViewListener = this;
+            hView.setAdapter(hAdapter);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onVideoClick(filteredVideos.get(0));
+                }
+            },1000);
+        }
+    }
+
+    private List<Video> filterVideosByCategories(String s) {
+        List<Video> tempFavs = new ArrayList();
+        for(Video v: videos){
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if (v==null || v.getCategory()==null || v.getCategory().isEmpty())
+            {
+                continue;
+            }
+
+            if(v.getCategory().toLowerCase().contains(s.toLowerCase())){
+                tempFavs.add(v);
+            }
+        }
+
+        return tempFavs;
     }
 
     private void loadVideosAdapter(List<Video> videos) {

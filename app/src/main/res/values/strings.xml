@@ -59,5 +59,14 @@
     <string name="welcome">"Welcome !"</string>
     <string name="payments_show_name">%s</string>
     <string name="login_failed">Login failed</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="filter_by_category">Filter by Category:</string>
+
+    <string-array name="sorting_choices">
+        <item>Title</item>
+        <item>Date</item>
+        <item>Difficulty</item>
+    </string-array>
 
 </resources>
