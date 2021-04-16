@@ -232,7 +232,8 @@ public class VideoFragment extends Fragment implements VideoViewListener {
                 }
 
                 categoryAdapter = new CategoryAdapter(getContext(),categories);
-                categoryAdapter.categoryListener = VideoFragment.this;
+                //TODO make this line work
+//                categoryAdapter.categoryListener = VideoFragment.this;
                 vView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 vView.setAdapter(categoryAdapter);
@@ -353,7 +354,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
         ((MainActivity)getActivity()).loadFragment(fragment);
     }
 
-    @Override
+
     public void onCategoryClick(Category category) {
         WatchVideoFragment fragment = WatchVideoFragment.newInstance(category.getCategory(),user);
         ((MainActivity)getActivity()).loadFragment(fragment);
