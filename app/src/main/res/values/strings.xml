@@ -8,6 +8,7 @@
     <string name="about">About</string>
     <string name="profile">Profile</string>
     <string name="whatsnew">What\'s New!</string>
+    <string name="welcome_user">Hey There %1$s!</string>
 
     <!-- Alerts -->
     <string name="alert_email_sent">Email Sent</string>
@@ -22,6 +23,7 @@
     <!-- Actions -->
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_out">Sign Out</string>
     <string name="action_register_short">Register</string>
     <string name="action_create_account">Create account</string>
     <string name="action_register">Become a member.</string>

@@ -43,6 +43,11 @@ public class LoggedInUser implements Serializable {
         return displayName;
     }
 
+    public String getFirstName() {
+        String[] strings = displayName.trim().split(" ");
+        return strings[0];
+    }
+
     public String getEmail(){
         return this.email;
     }
