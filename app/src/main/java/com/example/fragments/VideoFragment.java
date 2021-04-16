@@ -28,10 +28,12 @@ import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.CategoryAdapter;
 import com.example.tools.CategoryListener;
+import com.example.tools.VideoSorter;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,10 +41,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class VideoFragment extends Fragment implements VideoViewListener, CategoryListener {
+public class VideoFragment extends Fragment implements VideoViewListener {
     private RecyclerView vView;
     private VideoViewAdapter vAdapter;
     private RecyclerView.LayoutManager vManager;
@@ -103,17 +106,59 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
 
         spCategories = view.findViewById(R.id.spCategories);
 
+        List<String> dataset = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            dataset.add("Thumbnail " + i);
+        }
+
+        //vAdapter = new VideoViewAdapter(dataset);
+        //vView.setAdapter(vAdapter);
+
         loadCategories();
 
-      //  loadVideos();
+        loadVideos();
 
-        Button vFilter = (Button) view.findViewById(R.id.video_filter);
-        vFilter.setVisibility(View.GONE);
-        vFilter.setOnClickListener(v -> {
+        VideoSorter videoSorter = new VideoSorter();
+
+        Spinner sortingSpinner = (Spinner) view.findViewById(R.id.video_sort);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sorting_choices, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortingSpinner.setAdapter(adapter);
+
+        sortingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSort = (String) parent.getItemAtPosition(position);
+
+                switch(selectedSort){
+                    case "Title":
+                        videos = videoSorter.sortAlphabetically(videos);
+                        break;
+                    case "Difficulty":
+                        videos = videoSorter.sortByDifficultyThenAlphabetically(videos);
+                        break;
+                    case "Date":
+                        videos = videoSorter.sortByDate(videos);
+                        break;
+                }
+
+                loadVideosAdapter(videos);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Button vSearch = (Button) view.findViewById(R.id.video_search);
+        vSearch.setOnClickListener(v -> {
             if (searchview.getQuery().toString().isEmpty()){
                 Toast.makeText(getActivity(), "Search text cant be empty", Toast.LENGTH_SHORT).show();
             }else{
-                filterVideos(searchview.getQuery().toString().trim());
+                searchVideos(searchview.getQuery().toString().trim());
             }
         });
 
@@ -187,7 +232,8 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
                 }
 
                 categoryAdapter = new CategoryAdapter(getContext(),categories);
-                categoryAdapter.categoryListener = VideoFragment.this;
+                //TODO make this line work
+//                categoryAdapter.categoryListener = VideoFragment.this;
                 vView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 vView.setAdapter(categoryAdapter);
@@ -238,6 +284,8 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
             }
         }
 
+
+
         if (tempFavs.isEmpty()){
             Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
         }else {
@@ -246,7 +294,7 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
         }
     }
 
-    private void filterVideos(String s) {
+    private void searchVideos(String s) {
         List<Video> tempFavs = new ArrayList();
         for(Video v: videos){
             //or use .equal(text) with you want equal match
@@ -278,6 +326,13 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
                     video.setVideoURL((String) ds.get("url"));
                     video.setThumbnail((String) ds.get("thumbnail"));
                     video.setCategory((String) ds.get("category"));
+
+                    Long difficultyLong = (Long) ds.get("difficulty");
+                    video.setDifficulty(difficultyLong.intValue());
+
+                    Timestamp timestamp = (Timestamp) ds.get("dateUploaded");
+                    video.setDateUploaded(timestamp.toDate());
+
                     videos.add(video);
                 }
 
@@ -299,7 +354,7 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
         ((MainActivity)getActivity()).loadFragment(fragment);
     }
 
-    @Override
+
     public void onCategoryClick(Category category) {
         WatchVideoFragment fragment = WatchVideoFragment.newInstance(category.getCategory(),user);
         ((MainActivity)getActivity()).loadFragment(fragment);

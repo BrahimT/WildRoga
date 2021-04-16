@@ -54,12 +54,12 @@ public class VideoSorterTest {
     private void setTestVideos(){
         testVideos = new ArrayList<>();
 
-        testVideos.add(new Video("1", "", VideoDifficulty.HARD, "How to yoga", "", "", null));
-        testVideos.add(new Video("2", "", VideoDifficulty.EASY, "Why to yoga", "", "", null));
-        testVideos.add(new Video("3", "", VideoDifficulty.MEDIUM, "How to dance", "", "", null));
-        testVideos.add(new Video("4", "", VideoDifficulty.HARD, "Never yoga", "", "", null));
-        testVideos.add(new Video("5", "", VideoDifficulty.EASY, "What is yoga", "", "", null));
-        testVideos.add(new Video("6", "", VideoDifficulty.MEDIUM, "Why is yoga", "", "", null));
+        testVideos.add(new Video("1", "", 2, "How to yoga", "", "", null));
+        testVideos.add(new Video("2", "", 0, "Why to yoga", "", "", null));
+        testVideos.add(new Video("3", "", 1, "How to dance", "", "", null));
+        testVideos.add(new Video("4", "", 2, "Never yoga", "", "", null));
+        testVideos.add(new Video("5", "", 0, "What is yoga", "", "", null));
+        testVideos.add(new Video("6", "", 1, "Why is yoga", "", "", null));
 
     }
 

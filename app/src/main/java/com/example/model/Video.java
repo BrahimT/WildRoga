@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Video implements Serializable {
     private String id;
-    private VideoDifficulty difficulty;
+    private int difficulty;
     private String title;
     private String thumbnail;
     private String videoURL;
@@ -28,11 +28,11 @@ public class Video implements Serializable {
 
     public Video() { }
 
-    public Video(String id, String videoURL, VideoDifficulty difficulty, String title, String thumbnail) {
+    public Video(String id, String videoURL, int difficulty, String title, String thumbnail) {
         this(id, videoURL, difficulty, title, thumbnail, "None", Calendar.getInstance().getTime());
     }
 
-    public Video(String id, String videoURL, VideoDifficulty difficulty, String title, String thumbnail, String category, Date uploaded){
+    public Video(String id, String videoURL, int difficulty, String title, String thumbnail, String category, Date uploaded){
         this.id = id;
         this.videoURL = videoURL;
         this.difficulty = difficulty;
@@ -50,11 +50,11 @@ public class Video implements Serializable {
         this.id = id;
     }
 
-    public VideoDifficulty getDifficulty(){
+    public int getDifficulty(){
         return this.difficulty;
     }
 
-    public void setDifficulty(VideoDifficulty difficulty){
+    public void setDifficulty(int difficulty){
         this.difficulty = difficulty;
     }
 
