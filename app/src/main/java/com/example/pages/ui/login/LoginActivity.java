@@ -42,6 +42,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -68,77 +70,12 @@ public class LoginActivity extends AppCompatActivity {
 
         final TextInputEditText usernameEditText = findViewById(R.id.username);
         final TextInputEditText passwordEditText = findViewById(R.id.password);
-        final TextInputLayout usernameLayout = findViewById(R.id.layout_email);
+        final TextInputLayout emailLayout = findViewById(R.id.layout_email);
         final TextInputLayout passwordLayout = findViewById(R.id.layout_password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
         final TextView registerText = findViewById(R.id.register);
         final TextView forgotPassText = findViewById(R.id.forgot_password);
-
-//        TODO check if this is needed for anything, not required to do pass/email error checking on login screen - Matt
-//        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
-//            if (loginFormState == null) {
-//                return;
-//            }
-//            loginButton.setEnabled(loginFormState.isDataValid());
-//
-//            //Email Entry Error
-//            if (loginFormState.getEmailError() != null) {
-//                usernameLayout.setError(getString(loginFormState.getEmailError()));
-//            } else {
-//                usernameLayout.setError(null);
-//            }
-//
-//            //Password Entry Error
-//            if (loginFormState.getPasswordError() != null) {
-//                passwordLayout.setError(getString(loginFormState.getPasswordError()));
-//            } else {
-//                passwordLayout.setError(null);
-//            }
-//        });
-//
-//        loginViewModel.getLoginResult().observe(this, loginResult -> {
-//            if (loginResult == null) {
-//                return;
-//            }
-//            loadingProgressBar.setVisibility(View.GONE);
-//            if (loginResult.getError() != null) {
-//                showLoginFailed(loginResult.getError());
-//            }
-//            if (loginResult.getSuccess() != null) {
-//                updateUiWithUser(loginResult.getSuccess());
-//            }
-//            setResult(Activity.RESULT_OK);
-//
-//            //Complete and destroy login activity once successful
-//            finish();
-//        });
-//
-//        TextWatcher afterTextChangedListener = new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-//                        PasswordUtilities.editTextToCharArray(passwordEditText));
-//            }
-//        };
-//        usernameEditText.addTextChangedListener(afterTextChangedListener);
-//
-//        passwordEditText.addTextChangedListener(afterTextChangedListener);
-//        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                loginViewModel.login(usernameEditText.getText().toString(),
-//                        PasswordUtilities.editTextToCharArray(passwordEditText));
-//            }
-//            return false;
-//        });
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
@@ -156,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                             //salt = result;
                             DocumentSnapshot saltSnapshot = task.getResult();
 
-
                             if(saltSnapshot != null && saltSnapshot.exists()){
                                 salt = PasswordUtilities.stringToByteArray((String) Objects.requireNonNull(saltSnapshot.get("salt")));
 
@@ -165,9 +101,17 @@ public class LoginActivity extends AppCompatActivity {
                                 mAuth.signInWithEmailAndPassword(email, hashedPassword).addOnCompleteListener(this, loginTask -> {
                                     if (task.isSuccessful()) {
                                         startActivity(new Intent(this, MainActivity.class));
-                                    } else {
-                                        Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
-                                        loadingProgressBar.setVisibility(View.INVISIBLE);
+                                    } else if (!task.isSuccessful()) {
+                                        try {
+                                            throw task.getException();
+                                        } catch (FirebaseAuthInvalidUserException e) {
+                                            emailLayout.setError(getString(R.string.invalid_email));
+                                            emailLayout.requestFocus();
+                                        } catch (FirebaseAuthInvalidCredentialsException e) {
+                                            passwordLayout.setError(getString(R.string.incorrect_password));
+                                        } catch (Exception e) {
+                                            Log.e("EXCEPTION: ", e.getMessage());
+                                        }
                                     }
                                 });
                             }
