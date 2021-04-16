@@ -4,14 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/download"
+    android:background="@drawable/image"
     android:gravity="center"
-    tools:context="com.example.pages.ui.login.splashActivity">
-
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="329dp"
-        android:layout_height="292dp" />
-
-
-</RelativeLayout>
+    tools:context="com.example.pages.ui.login.splashActivity"/>
