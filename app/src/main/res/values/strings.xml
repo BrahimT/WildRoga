@@ -61,6 +61,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Payment">Payment</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="filter_by_category">Filter by Category:</string>
     
     <string-array name="sorting_choices">
         <item>Title</item>
