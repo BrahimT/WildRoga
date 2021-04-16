@@ -9,10 +9,12 @@
     <string name="profile">Profile</string>
     <string name="whatsnew">What\'s New!</string>
     <string name="welcome_user">Hey There %1$s!</string>
+    <string name="user_name">%1$s</string>
 
     <!-- Alerts -->
     <string name="alert_email_sent">Email Sent</string>
     <string name="alert_email_empty">Please enter your email…</string>
+    <string name="alert_email_changed">Email changed</string>
 
     <!-- Prompts -->
     <string name="prompt_email">Email</string>
@@ -30,6 +32,10 @@
     <string name="action_forgot_password">Forgot password?</string>
     <string name="action_account_exists">Already have an account?</string>
     <string name="action_send_email">Send Email</string>
+    <string name="action_change_email">Update Email Address</string>
+    <string name="action_reset_password">Reset Password</string>
+    <string name="action_delete_account">Delete Account</string>
+    <string name="action_save_email">Save Email</string>
 
     <!-- UI Error Messages -->
     <string name="invalid_name">Your name is required</string>
@@ -39,6 +45,7 @@
     <string name="invalid_password_confirm">Password entries must match</string>
     <string name="invalid_email">Please enter a valid email address</string>
     <string name="existing_email">The email address is already in use</string>
+    <string name="incorrect_password">Incorrect password</string>
 
     <!-- General Text -->
     <string name="text_registration_1">CREATE ACCOUNT</string>
@@ -46,6 +53,7 @@
     <string name="text_login_1">WELCOME BACK!</string>
     <string name="text_login_2">Please Sign In.</string>
     <string name="text_not_logged_in">You are not logged in</string>
+    <string name="text_search">Search</string>
 
     <!-- Confirmation -->
     <string name="valid_password">Valid</string>
@@ -55,10 +63,12 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_payment">PaymentActivity</string>
     <string name="message_forgot_password">Enter your email address and we\'ll send you a recovery link.</string>
+    <string name="message_change_email">Update your email below, there will be a verification email sent to verify this new email.</string>
     <string name="welcome">"Welcome !"</string>
     <string name="payments_show_name">%s</string>
     <string name="login_failed">Login failed</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Payment">Payment</string>
     <string name="search">Search</string>

@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 .get(LoginViewModel.class);
         mAuth = FirebaseAuth.getInstance();
 
-        final TextInputEditText usernameEditText = findViewById(R.id.username);
+        final TextInputEditText emailEditText = findViewById(R.id.username);
         final TextInputEditText passwordEditText = findViewById(R.id.password);
         final TextInputLayout emailLayout = findViewById(R.id.layout_email);
         final TextInputLayout passwordLayout = findViewById(R.id.layout_password);
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            String email = usernameEditText.getText().toString();
+            String email = emailEditText.getText().toString().toLowerCase();
             Log.d("email", email);
             String password = passwordEditText.getText().toString();
             Log.d("passwd", password);
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(saltSnapshot != null && saltSnapshot.exists()){
                                 salt = PasswordUtilities.stringToByteArray((String) Objects.requireNonNull(saltSnapshot.get("salt")));
 
-                                String hashedPassword = PasswordUtilities.byteArrayToString(PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordEditText), salt));
+                                String hashedPassword = PasswordUtilities.byteArrayToString(Objects.requireNonNull(PasswordUtilities.hashPassword(PasswordUtilities.editTextToCharArray(passwordEditText), salt)));
 
                                 mAuth.signInWithEmailAndPassword(email, hashedPassword).addOnCompleteListener(this, loginTask -> {
                                     if (task.isSuccessful()) {
