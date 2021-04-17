@@ -73,19 +73,19 @@ public class ProfileFragment extends Fragment {
                     .whereEqualTo("userId", user.getUid())
                     .get()
                     .addOnCompleteListener(task -> {
-                       if (task.isSuccessful()) {
-                           List<LoggedInUser> users = task.getResult().toObjects(LoggedInUser.class);
+                        if (task.isSuccessful()) {
+                            List<LoggedInUser> users = task.getResult().toObjects(LoggedInUser.class);
 
-                           if (users.size() == 1) {
-                               userRef = users.get(0);
-                               userRef.setDocumentId(task.getResult().getDocuments().get(0).getId());
+                            if (users.size() == 1) {
+                                userRef = users.get(0);
+                                userRef.setDocumentId(task.getResult().getDocuments().get(0).getId());
 
-                               String firstName = userRef.getDisplayName();
-                               Resources res = getResources();
-                               String formattedString = res.getString(R.string.user_name, firstName);
-                               tvName.setText(formattedString);
-                           }
-                       }
+                                String firstName = userRef.getDisplayName();
+                                Resources res = getResources();
+                                String formattedString = res.getString(R.string.user_name, firstName);
+                                tvName.setText(formattedString);
+                            }
+                        }
                     });
         }
 
@@ -97,9 +97,9 @@ public class ProfileFragment extends Fragment {
         tvUpdateEmail.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
                     .setView(R.layout.alert_change_email)
-                    .setMessage(R.string.message_change_email)
+                    .setMessage(R.string.change_email)
                     .setTitle(R.string.action_change_email)
-                    .setPositiveButton(R.string.action_save_email, (dialog, which) -> {
+                    .setPositiveButton(R.string.save_email, (dialog, which) -> {
                         Dialog d = (Dialog) dialog;
                         TextInputEditText etChangeEmail = d.findViewById(R.id.alert_email_field);
                         String oldEmail = user.getEmail();
@@ -126,7 +126,7 @@ public class ProfileFragment extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(requireContext(), R.string.alert_email_changed, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "email changed", Toast.LENGTH_SHORT).show();
                             } else if (!task.isSuccessful()) {
                                 try {
                                     throw task.getException();
