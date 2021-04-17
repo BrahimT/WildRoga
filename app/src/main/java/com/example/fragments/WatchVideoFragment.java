@@ -68,19 +68,6 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
         return myFragment;
     }
 
-    public static WatchVideoFragment newInstance(String category, LoggedInUser user) {
-        WatchVideoFragment myFragment = new WatchVideoFragment();
-
-        Bundle args = new Bundle();
-        args.putSerializable("category", category);
-        args.putSerializable("user", user);
-        myFragment.setArguments(args);
-
-        return myFragment;
-    }
-
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_video, container, false);
@@ -107,9 +94,9 @@ public class WatchVideoFragment extends Fragment implements VideoViewListener {
         if (getArguments()!=null){
             currentVideo = (Video) getArguments().getSerializable("video");
             user = (LoggedInUser) getArguments().getSerializable("user");
-           // videoPlayerView.setSource(currentVideo.getVideoURL());
-            //videoTitle.setText(currentVideo.getTitle());
-            //setupFavorites(currentVideo);
+            videoPlayerView.setSource(currentVideo.getVideoURL());
+            videoTitle.setText(currentVideo.getTitle());
+            setupFavorites(currentVideo);
         }
     }
 
