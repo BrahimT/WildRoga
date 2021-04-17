@@ -97,9 +97,9 @@ public class ProfileFragment extends Fragment {
         tvUpdateEmail.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
                     .setView(R.layout.alert_change_email)
-                    .setMessage(R.string.change_email)
+                    .setMessage(R.string.message_change_email)
                     .setTitle(R.string.action_change_email)
-                    .setPositiveButton(R.string.save_email, (dialog, which) -> {
+                    .setPositiveButton(R.string.action_save_email, (dialog, which) -> {
                         Dialog d = (Dialog) dialog;
                         TextInputEditText etChangeEmail = d.findViewById(R.id.alert_email_field);
                         String oldEmail = user.getEmail();
