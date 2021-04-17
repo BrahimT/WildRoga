@@ -39,6 +39,7 @@
     <string name="invalid_password_confirm">Password entries must match</string>
     <string name="invalid_email">Please enter a valid email address</string>
     <string name="existing_email">The email address is already in use</string>
+    <string name="incorrect_password">Incorrect password</string>
 
 
     <!-- General Text -->
@@ -65,11 +66,18 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="filter_by_category">Filter by Category:</string>
-    <string name="incorrect_password">Password Incorrect</string>
-
+    
     <string-array name="sorting_choices">
         <item>Title</item>
         <item>Date</item>
         <item>Difficulty</item>
     </string-array>
+
+    <string name="user_name">username</string>
+    <string name="action_change_email">change email</string>
+    <string name="action_reset_password">reset password</string>
+    <string name="action_delete_account">delete account</string>
+    <string name="change_email">Change email</string>
+    <string name="save_email">Save email</string>
+
 </resources>

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@drawable/isto"
     android:padding="5dp">
 
     <LinearLayout
@@ -20,19 +21,12 @@
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/video_search"
+            android:id="@+id/video_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/search" />
-
-        <Spinner
-            android:id="@+id/video_sort"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/filter"
-            android:drawableEnd="@drawable/ic_filter"/>
+            android:layout_weight="2"
+            android:text="Filter"
+            android:drawableRight="@drawable/ic_filter"/>
 
     </LinearLayout>
 
@@ -41,7 +35,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/filter_by_category"/>
+        android:text="Filter by Category:"/>
 
     <Spinner
         android:id="@+id/spCategories"
