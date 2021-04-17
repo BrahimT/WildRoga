@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WildRoga</string>
+
+    <!-- UI Component Strings -->
+    <string name="home">Accueil</string>
+    <string name="video">Vidéo</string>
+    <string name="favorite">Préférés</string>
+    <string name="about">A propos</string>
+    <string name="profile">Profile</string>
+
+
+    <string name="whatsnew">Quoi de neuf!</string>
+    <string name="title_activity_login">ActivitéConnexion</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="prompt_password_confirm">Confirmez le mot de passe</string>
+    <string name="prompt_name">Nom complet </string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="action_register_short">S’inscrire</string>
+    <string name="action_create_account">Créer un compte </string>
+    <string name="action_register">Devenir membre</string>
+    <string name="action_forgot_password">Mot de passe oublié?</string>
+    <string name="action_account_exists"> Un compte existant est relié à cette addresse</string>
+    <string name="action_send_email">Envoyer un mail</string>
+    <string name="message_forgot_password">Entrez votre email pour recevoir votre lien de récupération.</string>
+    <string name="welcome">"Bienvenue !"</string>
+    <string name="alert_email_sent">Email envoyé!</string>
+    <string name="invalid_password_length">Le mot de passe doit contenir au moins 9 caractères </string>
+    <string name="invalid_password_capital">Le mot de passe doit contenir au moins une lettre majuscule </string>
+    <string name="invalid_password_number">Le mot de passe doit contenir au moins 1 chiffre</string>
+    <string name="invalid_password_confirm">Les entrées de mot de passe doivent correspondre</string>
+    <string name="valid_password">Valide</string>
+    <string name="login_failed">Echec de la connexion </string>
+    <string name="hello_blank_fragment">Salut fragment vide</string>
+    <string name="title_activity_payment">ActivitéPaiement</string>
+    <string name="payments_show_name">%s</string>
+    <string name="text_registration_1">CREER UN COMPTE</string>
+    <string name="text_registration_2">Ici c\est chez vous!</string>
+    <string name="text_login_1"> VOUS ÊTES DE RETOUR!</string>
+    <string name="action_sign_out">Se déconnecter </string>
+    <string name="invalid_name">Votre nom est requis</string>
+    <string name="invalid_email">Veuillez entrer une addresse e-mail valide.</string>
+    <string name="existing_email">L/‘addresse email est déjà utilisée </string>
+    <string name="text_login_2">Please Se connecter.</string>
+    <string name="text_not_logged_in">Vous n\’êtes pas connecté </string>
+    <string name="valid_confirm_password">Valide</string>
+    <string name="Payment">Paiement</string>
+    <string name="alert_email_empty">Veuillez entrer votre e-mail…</string>
+    <string name="welcome_user">salut %1$s!</string>
+    <string name="search">Recherche</string>
+    <string name="filter">Filtré</string>
+    <string name="incorrect_password">mauvais mot de passe</string>
+    <string name="filter_by_category">Filtré par category:</string>
+    <string-array name="sorting_choices">
+        <item>Titre</item>
+        <item>Date</item>
+        <item>Difficulté</item>
+    </string-array>
+
+
+
+</resources>
