@@ -22,6 +22,7 @@ import com.example.pages.MainActivity;
 import com.example.pages.ui.login.LoginActivity;
 import com.example.tools.VideoViewAdapter;
 import com.example.tools.VideoViewListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -141,14 +142,22 @@ public class HomeFragment extends Fragment implements VideoViewListener {
         videos = new ArrayList<>();
 
         db.collection("Video").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()) {
-                Video v = new Video();
-                v.setId(ds.getId());
-                v.setTitle( (String) ds.get("title"));
-                v.setVideoURL( (String) ds.get("url"));
-                v.setThumbnail( (String) ds.get("thumbnail"));
-                v.setCategory( (String) ds.get("category"));
-                videos.add(v);
+
+            for (DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
+                    Video video = new Video();
+                    video.setId(ds.getId());
+                    video.setTitle((String) ds.get("title"));
+                    video.setVideoURL((String) ds.get("url"));
+                    video.setThumbnail((String) ds.get("thumbnail"));
+                    video.setCategory((String) ds.get("category"));
+
+                    Long difficultyLong = (Long) ds.get("difficulty");
+                    video.setDifficulty(difficultyLong.intValue());
+
+                    Timestamp timestamp = (Timestamp) ds.get("dateUploaded");
+                    video.setDateUploaded(timestamp.toDate());
+
+                    videos.add(video);
             }
 
             loadVideosAdapter(videos);

@@ -100,7 +100,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
             Map<String, String> saltToStore = new HashMap<>();
             saltToStore.put("salt", PasswordUtilities.byteArrayToString(PasswordUtilities.getSaltFromHashedPassword(passwordHash, 16)));
-            FIRESTORE.collection("salts").document(email).set(saltToStore);
+            FIRESTORE.collection("salts").document(email.toLowerCase()).set(saltToStore);
 
             mAuth.createUserWithEmailAndPassword(email, PasswordUtilities.byteArrayToString(passwordHash)).addOnCompleteListener(this, task -> {
 
@@ -112,6 +112,11 @@ public class RegistrationActivity extends AppCompatActivity {
                             .addOnFailureListener( this, storeTask ->{
                         mAuth.getCurrentUser().delete();
                     });
+
+//                    FIRESTORE.collection("users").document(mAuth.getCurrentUser().getUid()).set(user)
+//                            .addOnFailureListener(this, storeTask -> {
+//                                mAuth.getCurrentUser().delete();
+//                            });
 
                     redirectUser();
                 } else if (!task.isSuccessful()) {
