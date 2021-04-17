@@ -114,7 +114,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
         //vAdapter = new VideoViewAdapter(dataset);
         //vView.setAdapter(vAdapter);
 
-        loadCategories();
+//        loadCategories();
 
         loadVideos();
 
@@ -233,7 +233,7 @@ public class VideoFragment extends Fragment implements VideoViewListener {
 
                 categoryAdapter = new CategoryAdapter(getContext(),categories);
                 //TODO make this line work
-//                categoryAdapter.categoryListener = VideoFragment.this;
+                categoryAdapter.categoryListener = VideoFragment.this;
                 vView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 vView.setAdapter(categoryAdapter);

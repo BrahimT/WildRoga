@@ -40,6 +40,7 @@
     <string name="invalid_email">Please enter a valid email address</string>
     <string name="existing_email">The email address is already in use</string>
 
+
     <!-- General Text -->
     <string name="text_registration_1">CREATE ACCOUNT</string>
     <string name="text_registration_2">You Belong Here.</string>
@@ -64,7 +65,8 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="filter_by_category">Filter by Category:</string>
-    
+    <string name="incorrect_password">Password Incorrect</string>
+
     <string-array name="sorting_choices">
         <item>Title</item>
         <item>Date</item>
