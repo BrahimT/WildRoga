@@ -271,8 +271,11 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
     private void filterVideosByCategories(String s) {
         List<Video> tempFavs = new ArrayList();
         for(Video v: videos){
-            //or use .equal(text) with you want equal match
-            //use .toLowerCase() for better matches
+            if (v==null || v.getCategory()==null || v.getCategory().isEmpty())
+            {
+                continue;
+            }
+
             if(v.getCategory().toLowerCase().contains(s.toLowerCase())){
                 tempFavs.add(v);
             }
@@ -280,10 +283,11 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
 
         if (tempFavs.isEmpty()){
             Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
-        }else {
-            //update recyclerview
-            vAdapter.setVideos(tempFavs);
         }
+        //update recyclerview
+        videos = tempFavs;
+        loadVideosAdapter(videos);
+
     }
 
     private void searchVideos(String s) {
@@ -298,10 +302,11 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
 
         if (tempFavs.isEmpty()){
             Toast.makeText(getActivity(), "No Videos Available", Toast.LENGTH_SHORT).show();
-        }else {
-            //update recyclerview
-            vAdapter.setVideos(tempFavs);
         }
+
+        vAdapter.setVideos(tempFavs);
+        vAdapter.notifyDataSetChanged();
+
     }
 
     public void loadVideos() {
@@ -327,10 +332,10 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
 
                     videos.add(video);
                 }
-
-                loadVideosAdapter(videos);
             }
         });
+
+        loadVideosAdapter(videos);
     }
 
     private void loadVideosAdapter(List<Video> videos) {
@@ -353,8 +358,6 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
 
     private void loadVideoView(String category){
         filterVideosByCategories(category);
-        loadVideosAdapter(videos);
-
 
         getView().findViewById(R.id.filter_layout).setVisibility(View.VISIBLE);
 //        searchview.setVisibility(View.VISIBLE);
@@ -362,6 +365,7 @@ public class VideoFragment extends Fragment implements VideoViewListener, Catego
 //        sortingSpinner.setVisibility(View.VISIBLE);
         spCategories.setVisibility(View.GONE);
         vView.setVisibility(View.VISIBLE);
+
 
     }
 }
