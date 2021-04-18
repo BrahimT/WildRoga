@@ -9,10 +9,14 @@
     <string name="profile">Profile</string>
     <string name="whatsnew">What\'s New!</string>
     <string name="welcome_user">Hey There %1$s!</string>
+    <string name="user_name">%1$s</string>
 
     <!-- Alerts -->
     <string name="alert_email_sent">Email Sent</string>
     <string name="alert_email_empty">Please enter your email…</string>
+    <string name="alert_email_changed">Email Updated</string>
+    <string name="alert_reset_password">Reset Password Email Sent</string>
+    <string name="alert_user_deleted">Account Deleted</string>
 
     <!-- Prompts -->
     <string name="prompt_email">Email</string>
@@ -30,6 +34,11 @@
     <string name="action_forgot_password">Forgot password?</string>
     <string name="action_account_exists">Already have an account?</string>
     <string name="action_send_email">Send Email</string>
+    <string name="action_change_email">Update Email</string>
+    <string name="action_reset_password">Reset Password</string>
+    <string name="action_delete_account">Delete Account</string>
+    <string name="action_save_email">Save Email</string>
+    <string name="action_delete">Delete</string>
 
     <!-- UI Error Messages -->
     <string name="invalid_name">Your name is required</string>
@@ -40,7 +49,6 @@
     <string name="invalid_email">Please enter a valid email address</string>
     <string name="existing_email">The email address is already in use</string>
     <string name="incorrect_password">Incorrect password</string>
-
 
     <!-- General Text -->
     <string name="text_registration_1">CREATE ACCOUNT</string>
@@ -57,10 +65,12 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_payment">PaymentActivity</string>
     <string name="message_forgot_password">Enter your email address and we\'ll send you a recovery link.</string>
+    <string name="message_change_email">Enter an updated email address.</string>
+    <string name="message_reset_password">Enter your email address and a password reset email will be sent to you.</string>
+    <string name="message_delete_account">Sorry to see you go! Please enter your login information to delete your account.</string>
     <string name="welcome">"Welcome !"</string>
     <string name="payments_show_name">%s</string>
     <string name="login_failed">Login failed</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Payment">Payment</string>
     <string name="search">Search</string>
@@ -72,12 +82,5 @@
         <item>Date</item>
         <item>Difficulty</item>
     </string-array>
-
-    <string name="user_name">username</string>
-    <string name="action_change_email">change email</string>
-    <string name="action_reset_password">reset password</string>
-    <string name="action_delete_account">delete account</string>
-    <string name="change_email">Change email</string>
-    <string name="save_email">Save email</string>
 
 </resources>

@@ -74,11 +74,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Payment">Payment</string>
-    <string name="user_name">username</string>
+    <string name="user_name">%1$s</string>
     <string name="action_change_email">change email</string>
     <string name="action_reset_password">reset password</string>
     <string name="action_delete_account">delete account</string>
-    <string name="change_email">Change email</string>
     <string name="save_email">Save email</string>
 
 </resources>

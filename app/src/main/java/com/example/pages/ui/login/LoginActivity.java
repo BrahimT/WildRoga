@@ -132,27 +132,25 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(this, RegistrationActivity.class));
         });
 
-        forgotPassText.setOnClickListener(v -> {
-            new MaterialAlertDialogBuilder(this)
-                    .setView(R.layout.alert_forgot_password)
-                    .setMessage(R.string.message_forgot_password)
-                    .setTitle(R.string.action_forgot_password)
-                    .setPositiveButton(R.string.action_send_email, (dialog, which) -> {
-                        Dialog d = (Dialog) dialog;
-                        TextInputEditText forgotPasswordEditText = d.findViewById(R.id.alert_email_field);
-                        String emailFP = forgotPasswordEditText.getText().toString();
+        forgotPassText.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                .setView(R.layout.alert_forgot_password)
+                .setMessage(R.string.message_forgot_password)
+                .setTitle(R.string.action_forgot_password)
+                .setPositiveButton(R.string.action_send_email, (dialog, which) -> {
+                    Dialog d = (Dialog) dialog;
+                    TextInputEditText forgotPasswordEditText = d.findViewById(R.id.alert_email_field);
+                    String emailFP = forgotPasswordEditText.getText().toString();
 
-                        mAuth.sendPasswordResetEmail(emailFP).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(getBaseContext(), R.string.alert_email_sent, Toast.LENGTH_SHORT).show();
-                            } else if (!task.isSuccessful()) {
-                                Log.d("ForgotPass", "Error sending email to: " + emailFP);
-                                //TODO error
-                            }
-                        });
-                    })
-                    .show();
-        });
+                    mAuth.sendPasswordResetEmail(emailFP).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getBaseContext(), R.string.alert_email_sent, Toast.LENGTH_SHORT).show();
+                        } else if (!task.isSuccessful()) {
+                            Log.d("ForgotPass", "Error sending email to: " + emailFP);
+                            //TODO error
+                        }
+                    });
+                })
+                .show());
     }
 
     @Override
