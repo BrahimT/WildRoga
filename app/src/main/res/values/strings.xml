@@ -14,6 +14,9 @@
     <!-- Alerts -->
     <string name="alert_email_sent">Email Sent</string>
     <string name="alert_email_empty">Please enter your email…</string>
+    <string name="alert_email_changed">Email Updated</string>
+    <string name="alert_reset_password">Reset Password Email Sent</string>
+    <string name="alert_user_deleted">Account Deleted</string>
 
     <!-- Prompts -->
     <string name="prompt_email">Email</string>
@@ -35,6 +38,7 @@
     <string name="action_reset_password">Reset Password</string>
     <string name="action_delete_account">Delete Account</string>
     <string name="action_save_email">Save Email</string>
+    <string name="action_delete">Delete</string>
 
     <!-- UI Error Messages -->
     <string name="invalid_name">Your name is required</string>
@@ -62,6 +66,8 @@
     <string name="title_activity_payment">PaymentActivity</string>
     <string name="message_forgot_password">Enter your email address and we\'ll send you a recovery link.</string>
     <string name="message_change_email">Enter an updated email address.</string>
+    <string name="message_reset_password">Enter your email address and a password reset email will be sent to you.</string>
+    <string name="message_delete_account">Sorry to see you go! Please enter your login information to delete your account.</string>
     <string name="welcome">"Welcome !"</string>
     <string name="payments_show_name">%s</string>
     <string name="login_failed">Login failed</string>
